@@ -54,6 +54,7 @@ body {
   background-color: #343a40;
   font-family: "WestEngland", "Source Sans Pro", sans-serif;
   line-height: 1.0;
+  word-spacing: 0.05em;
   position: relative;
   top: 4px;
   font-size: 18px;
