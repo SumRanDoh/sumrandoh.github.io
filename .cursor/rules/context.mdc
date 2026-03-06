@@ -6,3 +6,5 @@ alwaysApply: true
 This is the website for SumRanDoh's game studio.
 
 It describes the game I am making, Prismatics, which is a roguelike deckbuilder game played on a factory floor.
+
+We use query-string cache-busting on custom CSS (`style.css?v=N`, `responsive.css?v=N`). Bump the version when you ship style changes so browsers don’t serve stale cached styles.
