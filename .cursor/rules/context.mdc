@@ -7,4 +7,10 @@ This is the website for SumRanDoh's game studio.
 
 It describes the game I am making, Prismatics, which is a roguelike deckbuilder game played on a factory floor.
 
+**Prismatics Godot repo:** `/Users/caleb/Prismatics/prismatics/`
+
+**The Interface** (capitalized) refers to the only character in Prismatics. Their dialogue lives in:
+- `/Users/caleb/Prismatics/prismatics/scenes/run/run.gd` increment_tutorial()
+- `/Users/caleb/Prismatics/prismatics/autoload/dialogue.gd`
+
 We use query-string cache-busting on custom CSS (`style.css?v=N`, `responsive.css?v=N`). The /ship workflow automatically increments these version params so browsers don’t serve stale cached styles.
