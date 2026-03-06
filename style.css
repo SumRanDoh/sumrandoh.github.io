@@ -504,7 +504,7 @@ a:link {
 /* Darker background for blog (and other .bg-dark sections) in dark mode */
 section.blog.bg-dark,
 #about.bg-dark {
-    background-color: #1e2124 !important;
+    background-color: #141414 !important;
 }
 
 /*::::::::::::::::::::::::::::::::::::

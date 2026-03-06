@@ -5,10 +5,10 @@ alwaysApply: true
 
 # /ship — Stage, commit, and push to main
 
-When the user runs **/ship** or says they want to "save to main" / "ship it" / "commit and push to main" (or clearly invokes this workflow):
+When the user runs **/ship** or says they want to "save to main" / "ship it" / "commit and push to main" — or signals approval to ship, e.g. **"Ok, let's try it"** — treat it as invoking this workflow:
 
 1. **Bump CSS cache-buster** (quiet)  
-   In `index.html`, increment the version in `style.css?v=N` and `assets/css/responsive.css?v=N`. Do not call this out in the commit message.
+   In `index.html`, increment the version in `style.css?v=N` and `assets/css/responsive.css?v=N`. Do not mention this in the commit message or when confirming to the user.
 
 2. **Inspect changes**  
    Run `git status` and `git diff` (and `git diff --staged` if needed) so you know what’s being committed.
@@ -25,6 +25,6 @@ When the user runs **/ship** or says they want to "save to main" / "ship it" / "
    - `git push` (pushes current branch to its upstream; if not on main, run `git push <remote> main` where `<remote>` is from `git remote -v`)
 
 5. **Confirm**  
-   Tell the user that changes were staged, committed with the generated message, and pushed to `main`, and show the commit hash or a one-line summary if useful.
+   Tell the user that changes were staged, committed with the generated message, and pushed to `main`, and show the commit hash or a one-line summary if useful. Do not mention the CSS cache-buster.
 
 If the repo is dirty in a way that makes a single commit inappropriate (e.g. mixed WIP and release changes), say so and ask how they want to split the commit or branch.
