@@ -172,8 +172,15 @@
         margin-top: 15px;
     }
     .single-faq h4 {
-        padding-right: 60px;
         font-size: 24px; /* never smaller than .faq-body (24px) */
+    }
+
+    /* Hide email in footer on mobile */
+    .footer-area .copyright-text p br {
+        display: none;
+    }
+    .footer-area .copyright-text a {
+        display: none !important;
     }
 
 
