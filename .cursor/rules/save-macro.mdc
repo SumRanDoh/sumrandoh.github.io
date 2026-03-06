@@ -1,0 +1,27 @@
+---
+description: When user says /ship — stage, commit (with generated message), push to main
+alwaysApply: true
+---
+
+# /ship — Stage, commit, and push to main
+
+When the user runs **/ship** or says they want to "save to main" / "ship it" / "commit and push to main" (or clearly invokes this workflow):
+
+1. **Inspect changes**  
+   Run `git status` and `git diff` (and `git diff --staged` if needed) so you know what’s being committed.
+
+2. **Generate the commit message**  
+   - Summarize the changes in **similar language** to how the user (and you) discussed the work in this conversation.  
+   - Keep it **helpful and succinct**: one short paragraph per logical change.  
+   - If there are **several unrelated changes** since the last save, use **multiple short paragraphs** (one per theme).  
+   - Write in the same tone and level of detail as the conversation (e.g. “Fix run state not clearing on abandon” vs “Adjust current_run.gd to reset save_dict when the player abandons the run”).
+
+3. **Run the workflow**  
+   - `git add -A`  
+   - Commit using the generated message: for a single paragraph use `git commit -m "…"` (escape internal quotes); for multiple paragraphs use `git commit -m "First paragraph." -m "Second paragraph."` or write the message to a temp file and use `git commit -F path/to/file`.  
+   - `git push` (pushes current branch to its upstream; if not on main, run `git push <remote> main` where `<remote>` is from `git remote -v`)
+
+4. **Confirm**  
+   Tell the user that changes were staged, committed with the generated message, and pushed to `main`, and show the commit hash or a one-line summary if useful.
+
+If the repo is dirty in a way that makes a single commit inappropriate (e.g. mixed WIP and release changes), say so and ask how they want to split the commit or branch.

@@ -1,0 +1,1 @@
+Run the **ship** workflow: stage all changes, generate a succinct commit message from our conversation (paragraph style; multiple if unrelated changes), commit, and push to `develop`. Follow the full instructions in the save-macro rule.
