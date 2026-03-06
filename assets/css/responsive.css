@@ -173,7 +173,7 @@
     }
     .single-faq h4 {
         padding-right: 60px;
-        font-size: 16px;
+        font-size: 24px; /* never smaller than .faq-body (24px) */
     }
 
 
@@ -232,6 +232,34 @@
     ::::::::::::::::::::::::::::::::::::*/
     .contact-form {
         padding: 15px;
+    }
+
+    /*::::::::::::::::::::::::::::::::::::
+       Footer – center email on mobile
+    ::::::::::::::::::::::::::::::::::::*/
+    .footer-area .copyright-text,
+    .footer-area .copyright-text p {
+        text-align: center;
+    }
+    .footer-area .copyright-text a {
+        display: inline-block;
+        text-align: center;
+    }
+
+    /*::::::::::::::::::::::::::::::::::::
+       Pixel art – preserve aspect ratio
+    ::::::::::::::::::::::::::::::::::::*/
+    #prismatics-image,
+    .about-bg,
+    #prismatics .img-fluid {
+        object-fit: contain;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+    }
+    #prismatics-image {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
