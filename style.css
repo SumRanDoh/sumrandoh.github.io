@@ -53,6 +53,8 @@ body {
   position: relative;
   top: 4px;
   font-size: 18px;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
 }
 
 main.page {
