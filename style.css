@@ -499,6 +499,12 @@ a:link {
     line-height: 150%;
 }
 
+/* Darker background for blog (and other .bg-dark sections) in dark mode */
+section.blog.bg-dark,
+#about.bg-dark {
+    background-color: #1e2124 !important;
+}
+
 /*::::::::::::::::::::::::::::::::::::
    Contact Area 
 ::::::::::::::::::::::::::::::::::::*/
