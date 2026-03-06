@@ -237,13 +237,33 @@
     /*::::::::::::::::::::::::::::::::::::
        Footer – center email on mobile
     ::::::::::::::::::::::::::::::::::::*/
+    .footer-area .container {
+        width: 100%;
+        max-width: 100%;
+    }
+    .footer-area .row {
+        justify-content: center;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .footer-area [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
     .footer-area .copyright-text,
     .footer-area .copyright-text p {
-        text-align: center;
+        width: 100%;
+        text-align: center !important;
+    }
+    .footer-area .copyright-text p {
+        margin-left: auto;
+        margin-right: auto;
     }
     .footer-area .copyright-text a {
         display: inline-block;
-        text-align: center;
+        text-align: center !important;
     }
 
     /*::::::::::::::::::::::::::::::::::::

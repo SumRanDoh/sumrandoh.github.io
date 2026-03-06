@@ -42,6 +42,10 @@ html, body {
   padding: 0;
 }
 
+html {
+  background-color: #000;
+}
+
 body {
   min-height: 100vh;          /* key: at least viewport height */
   display: flex;              /* key: enable flex layout */
