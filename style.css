@@ -406,6 +406,7 @@ button:focus {
     position: absolute;
     top: 100%;
     right: 0;
+    left: auto;
     width: max-content;
     padding: 0.5rem 0;
     margin-top: -2px;
