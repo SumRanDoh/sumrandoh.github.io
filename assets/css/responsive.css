@@ -188,6 +188,10 @@
         width: 64px;
         height: 64px;
     }
+    .collection-piece-title,
+    .collection-piece-rules {
+        margin-bottom: 12px;
+    }
 
     /* Hide email in footer on mobile */
     .footer-area .copyright-text p br {

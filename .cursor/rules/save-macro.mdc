@@ -5,7 +5,9 @@ alwaysApply: true
 
 # /ship — Stage, commit, and push to main
 
-When the user runs **/ship** or says they want to "save to main" / "ship it" / "commit and push to main" — or signals approval to ship, e.g. **"Ok, let's try it"** — treat it as invoking this workflow:
+**When to run:** Run this workflow whenever you have uncommitted changes from your edits. Do not wait for the user to say /ship or approve — they always keep changes and need to see them on main. Also run when the user explicitly runs **/ship** or says "save to main" / "ship it" / "commit and push to main".
+
+**Workflow:**
 
 1. **Bump CSS cache-buster** (quiet)  
    In `index.html`, increment the version in `style.css?v=N` and `assets/css/responsive.css?v=N`. Do not mention this in the commit message or when confirming to the user.
