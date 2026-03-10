@@ -37,7 +37,7 @@
        About Area
     ::::::::::::::::::::::::::::::::::::*/
     .about-content {
-        margin-top: 30px;
+        margin-top: 0;
     }
 
     /*::::::::::::::::::::::::::::::::::::
@@ -131,10 +131,10 @@
     }
 
     /*::::::::::::::::::::::::::::::::::::
-       About Area
+       About Area – stack with text first on tiny screens (max 575px)
     ::::::::::::::::::::::::::::::::::::*/
     .about-content {
-        margin-top: 30px;
+        margin-top: 0;
     }
     .about-content h2 {
         font-size: 24px;
@@ -346,13 +346,6 @@
     }
 
     /*::::::::::::::::::::::::::::::::::::
-       About Area
-    ::::::::::::::::::::::::::::::::::::*/
-    .about-content {
-        margin-top: 30px;
-    }
-
-    /*::::::::::::::::::::::::::::::::::::
        Service Section
     ::::::::::::::::::::::::::::::::::::*/
     .service-area::before {
@@ -389,5 +382,18 @@
     ::::::::::::::::::::::::::::::::::::*/
     .contact-form {
         padding: 30px;
+    }
+}
+
+/* Absolute tiniest screens: About stacks with text first */
+@media only screen and (max-width: 575px) {
+    .about-row {
+        flex-direction: column;
+    }
+    .about-text-col {
+        order: 1;
+    }
+    .about-icon-col {
+        order: 2;
     }
 }

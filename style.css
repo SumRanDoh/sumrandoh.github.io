@@ -343,6 +343,19 @@ button:focus {
    About Area
 ::::::::::::::::::::::::::::::::::::*/
 
+#about {
+    padding: 60px 50px 25px 50px;
+}
+
+.about-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.about-icon-col {
+    flex-shrink: 0;
+}
+
 .about-bg {
     width: 150px;
     height: 156px;
@@ -399,7 +412,11 @@ button:focus {
 }
 
 .prismatics-block:last-child {
-    margin-bottom: 0;
+    margin-bottom: -0.5rem;
+}
+
+.prismatics-block:last-child .prismatics-screenshot {
+    margin-top: 1rem;
 }
 
 .prismatics-block-title {
