@@ -605,6 +605,8 @@ a:link {
 }
 .collection-section.bg-dark .collection-section-title {
     background-color: #343a40;
+    padding-top: 20px;
+    min-height: 64px;
 }
 .collection-section.bg-secondary .collection-section-title {
     background-color: #222222;
