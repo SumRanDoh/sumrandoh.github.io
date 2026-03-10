@@ -355,7 +355,7 @@ button:focus {
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 180px;
+    width: max-content;
     padding: 0.5rem 0;
     margin-top: -2px;
     background-color: #333;
@@ -540,7 +540,7 @@ a:link {
 .collection-item {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     gap: 1.5rem;
 }
 .collection-piece-img {
