@@ -85,6 +85,10 @@
     .collection-section-title {
         top: 0;
     }
+    .collection-section.bg-dark .collection-section-title {
+        padding-top: 8px;
+        min-height: 52px;
+    }
 
     .navbar-nav {
         background-color: #333;
