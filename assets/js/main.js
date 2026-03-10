@@ -19,7 +19,7 @@
 
     // Direct scroll (instant, no animation); offset so target isn't under sticky header
     $(function () {
-        $('.nav-link, .smoth-scroll').on('click', function (event) {
+        $('.nav-link, .smoth-scroll, .dropdown-item').on('click', function (event) {
             var $anchor = $(this);
             var href = $anchor.attr('href');
             if (href && href.indexOf('#') === 0) {
