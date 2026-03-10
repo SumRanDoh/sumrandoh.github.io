@@ -78,20 +78,80 @@ def strip_bbcode(text: str) -> str:
     text = re.sub(r"\[font_size=\d+\]", "", text)
     text = re.sub(r"\[/font_size\]", "", text)
     text = re.sub(r"\[/font\]", "", text)
-    # Replace format placeholders with readable defaults for static display
-    text = re.sub(r"%d", "1", text)
-    text = re.sub(r"%s", "—", text)
     return text.strip()
 
 
+def apply_rules_defaults(text: str, category: str, variant: str = "", color: str = "", rarity: str = "") -> str:
+    """Fill in nice-looking defaults for %d, %s, %0.0f etc. like the game does in-game."""
+    text = text.replace("\\n", " ").replace("  ", " ")
+    color = color or "red"
+    direction = "rightward"
+    direction_from = "the left"
+
+    # Order matters: replace %% first to preserve literal %
+    text = text.replace("%%", "\x00")
+    if category == "Component":
+        text = re.sub(r"%d", "1", text)
+        # Replace %s in order: Conveyor (color, direction), Packager (direction_from, color, color), Fabricator (direction)
+        replacements = []
+        if "from %s" in text:
+            replacements = [direction_from, color, color]  # Packager with direction
+        elif "into %s score multiplier" in text:
+            replacements = [color, color]  # Packager (LoadPlanner variant)
+        elif "moves them %s" in text:
+            replacements = [color, direction]  # Conveyor
+        elif "moves it %s" in text:
+            replacements = [color, direction]  # Fabricator
+        elif "moves them each" in text:
+            replacements = []  # Fabricator (ProcurementAgent) - no %s
+        else:
+            replacements = [color, direction]
+        for r in replacements:
+            text = text.replace("%s", r, 1)
+    elif category == "Challenge":
+        if "corner" in text:
+            text = text.replace("%s", "top left")
+        elif "tiles" in text:
+            text = text.replace("%d", "5")
+        elif "offices" in text:
+            text = text.replace("%s", "left half")
+        elif "just" in text or "Sinkhole" in variant:
+            text = text.replace("%s", "above")
+        else:
+            text = re.sub(r"%d", "1", text)
+            text = re.sub(r"%s", "—", text)
+    elif category == "Worker":
+        text = re.sub(r"%0\.0f%%", "10%", text)
+        text = re.sub(r"%0\.0f", "1", text)
+        text = re.sub(r"%d", "1", text)
+        text = re.sub(r"%s", "1.0", text)
+    else:
+        text = re.sub(r"%d", "1", text)
+        text = re.sub(r"%0\.0f", "1", text)
+        text = re.sub(r"%s", "—", text)
+    text = text.replace("\x00", "%")
+    return strip_bbcode(text)
+
+
 def extract_rules_from_class(class_path: Path) -> str:
-    """Extract rules = '...' from a GDScript class file."""
+    """Extract rules = '...' or ret = '...' from a GDScript class file."""
     if not class_path.exists():
         return ""
     content = class_path.read_text()
     m = re.search(r'''^\s*rules\s*=\s*['"](.+?)['"]''', content, re.MULTILINE | re.DOTALL)
     if m:
-        return strip_bbcode(m.group(1).replace("\\n", " ").replace("  ", " "))
+        return m.group(1)
+    # Workers use ret = '...' % [...] in set_rules(); find the main ret assignment
+    for pattern in [
+        r"var ret = '([^']*(?:\\.[^']*)*)'",
+        r'var ret = "([^"]*(?:\\.[^"]*)*)"',
+        r"ret = '([^']*(?:\\.[^']*)*)'",
+        r"ret \+= '([^']*(?:\\.[^']*)*)'",
+    ]:
+        for m in re.finditer(pattern, content):
+            s = m.group(1)
+            if len(s) > 15 and "%" in s:  # likely the rules string
+                return s
     return ""
 
 
@@ -132,31 +192,18 @@ def copy_images():
             if src.exists():
                 shutil.copy2(src, collection_dir / "operations" / src.name)
 
-    # Workers: scan parameters for Worker variants
-    worker_variants = []
-    params = GAME_REPO / "autoload" / "parameters.gd"
-    if params.exists():
-        content = params.read_text()
-        in_worker = False
-        for line in content.split("\n"):
-            if "'Worker':" in line:
-                in_worker = True
-                continue
-            if in_worker and "'WorkerUpgrade':" in line:
-                break
-            if in_worker and re.match(r"\s+'[a-z]+':\s*\{", line):
-                for r in RARITIES:
-                    if f"'{r}':" in line or f"'{r}':" in content[content.find(line):content.find(line)+500]:
-                        pass
-                # Extract variant names like 'Accountant', 'Janitor'
-                for m in re.finditer(r"'([A-Za-z0-9_]+)'\s*:", line):
-                    worker_variants.append(m.group(1))
-    # Simpler: just copy all worker pngs
-    workers_src = game_images / "workers"
-    if workers_src.exists():
-        for f in workers_src.glob("*.png"):
-            if not f.name.startswith("_"):
-                shutil.copy2(f, collection_dir / "workers" / f.name)
+    # Workers: use aseprite folder like the game does (res://assets/aseprite/)
+    aseprite_src = GAME_REPO / "assets" / "aseprite"
+    WORKER_IMG_OVERRIDES = {
+        "GraphicDesigner": "graphic_designer_red",
+        "InventoryClerk": "inventory_clerk_row",
+    }
+    for _rarity, variants in WORKER_VARIANTS:
+        for v in variants:
+            img_name = WORKER_IMG_OVERRIDES.get(v, to_snake(v))
+            src = aseprite_src / f"{img_name}.png"
+            if src.exists():
+                shutil.copy2(src, collection_dir / "workers" / f"{to_snake(v)}.png")
 
     # Worker upgrades: variant_tl.png
     wu_src = game_images / "worker_upgrades"
@@ -190,7 +237,8 @@ def build_collection_data() -> dict:
     data["challenges"] = []
     for v in CHALLENGE_VARIANTS:
         cls = classes_dir / "challenges" / f"{v}.gd"
-        rules = extract_rules_from_class(cls)
+        raw = extract_rules_from_class(cls)
+        rules = apply_rules_defaults(raw, "Challenge", variant=v)
         data["challenges"].append({
             "title": to_title(v),
             "rules": rules,
@@ -202,7 +250,8 @@ def build_collection_data() -> dict:
     for rarity, variant in COMPONENT_VARIANTS:
         for color in COMPONENT_COLORS:
             cls = classes_dir / "components" / f"{variant}.gd"
-            rules = extract_rules_from_class(cls)
+            raw = extract_rules_from_class(cls)
+            rules = apply_rules_defaults(raw, "Component", variant=variant, color=color)
             title = f"{color.capitalize()} {variant}"
             data["components"].append({
                 "title": title,
@@ -210,13 +259,18 @@ def build_collection_data() -> dict:
                 "image": f"assets/images/collection/components/{to_snake(variant)}_{color}_normal.png",
             })
 
-    # Component upgrades
+    # Component upgrades - rules include rarity bonus (+4/+6/+8/+10 for SelfBuff, +1/+2/+3/+4 for others)
     data["component_upgrades"] = []
     variant_names = {"boost": "Self Buff", "horiz": "Row Buff", "vert": "Column Buff", "adjacent": "Adjacent Buff"}
+    rarity_bonus = {"common": (4, 1), "uncommon": (6, 2), "rare": (8, 3), "legendary": (10, 4)}  # SelfBuff, others
     for variant, img_prefix in COMP_UPGRADE_VARIANTS:
         cls = classes_dir / "component_upgrades" / f"{variant}.gd"
-        rules = extract_rules_from_class(cls)
+        raw = extract_rules_from_class(cls)
+        base = raw if raw else "This component gets "
         for r in RARITIES:
+            sb, ob = rarity_bonus[r]
+            rules = base + f"+{sb}" if "This component" in base else base + f"+{ob}"
+            rules = strip_bbcode(rules)
             data["component_upgrades"].append({
                 "title": f"{r.capitalize()} {variant_names[img_prefix]}",
                 "rules": rules,
@@ -226,10 +280,10 @@ def build_collection_data() -> dict:
     # Operations
     data["operations"] = []
     for tup in OPERATION_VARIANTS:
-        rarity = tup[0]
         for v in tup[1:]:
             cls = classes_dir / "operations" / f"{v}.gd"
-            rules = extract_rules_from_class(cls)
+            raw = extract_rules_from_class(cls)
+            rules = apply_rules_defaults(raw, "Operation")
             data["operations"].append({
                 "title": to_title(v),
                 "rules": rules,
@@ -241,7 +295,8 @@ def build_collection_data() -> dict:
     for _rarity, variants in WORKER_VARIANTS:
         for v in variants:
             cls = classes_dir / "workers" / f"{v}.gd"
-            rules = extract_rules_from_class(cls)
+            raw = extract_rules_from_class(cls)
+            rules = apply_rules_defaults(raw, "Worker", variant=v)
             img = f"assets/images/collection/workers/{to_snake(v)}.png"
             data["workers"].append({
                 "title": to_title(v),
@@ -255,7 +310,6 @@ def build_collection_data() -> dict:
     for tup in WORKER_UPGRADE_VARIANTS:
         for v in tup[1:]:
             cls = classes_dir / "worker_upgrades" / f"{v}.gd"
-            rules = extract_rules_from_class(cls)
             img_base = WU_IMG.get(v, to_snake(v))
             img_path = WEBSITE / "assets" / "images" / "collection" / "worker_upgrades"
             found = None
@@ -268,6 +322,8 @@ def build_collection_data() -> dict:
                 for f in img_path.glob(f"{img_base}*.png"):
                     found = f"assets/images/collection/worker_upgrades/{f.name}"
                     break
+            raw = extract_rules_from_class(cls)
+            rules = apply_rules_defaults(raw, "WorkerUpgrade")
             data["worker_upgrades"].append({
                 "title": to_title(v),
                 "rules": rules,
@@ -292,26 +348,34 @@ def generate_collection_html(data: dict) -> str:
         "worker_upgrades": "Worker Upgrades",
         "operations": "Operations",
     }
+    # Alternate bg: dark, secondary, dark, secondary...
+    bg_classes = ["bg-dark", "bg-secondary", "bg-dark", "bg-secondary", "bg-dark", "bg-secondary"]
     order = ["components", "component_upgrades", "workers", "worker_upgrades", "operations", "challenges"]
 
-    for key in order:
+    for i, key in enumerate(order):
         if key not in data or not data[key]:
             continue
         title = category_titles.get(key, key.replace("_", " ").title())
         section_id = key.replace("_", "-")
+        bg = bg_classes[i % len(bg_classes)]
+        is_upgrade = key in ("component_upgrades", "worker_upgrades")
         items = []
         for piece in data[key]:
             img = piece.get("image", "")
             title_text = html_escape(piece.get("title", ""))
             rules = html_escape(piece.get("rules", ""))
+            if is_upgrade:
+                img_html = f'<div class="collection-piece-img-upgrade"><img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy"></div>'
+            else:
+                img_html = f'<img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy">'
             items.append(f'''            <div class="collection-item">
-              <img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy">
+              {img_html}
               <div class="collection-piece-text">
                 <div class="collection-piece-title">{title_text}</div>
                 <div class="collection-piece-rules">{rules}</div>
               </div>
             </div>''')
-        sections.append(f'''    <section id="collection-{section_id}" class="collection-section top-part-padding bg-dark">
+        sections.append(f'''    <section id="collection-{section_id}" class="collection-section top-part-padding {bg}">
         <div class="container">
             <h2 class="collection-section-title">{title}</h2>
             <div class="collection-list">

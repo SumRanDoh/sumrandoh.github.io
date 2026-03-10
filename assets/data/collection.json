@@ -7,12 +7,12 @@
     },
     {
       "title": "Flooding",
-      "rules": "Unoccupied tiles in the \u2014 corner of the factory floor are disabled this month",
+      "rules": "Unoccupied tiles in the top left corner of the factory floor are disabled this month",
       "image": "assets/images/collection/challenges/flooding.png"
     },
     {
       "title": "Floor Hazard",
-      "rules": "1 random empty factory tiles are disabled this month",
+      "rules": "5 random empty factory tiles are disabled this month",
       "image": "assets/images/collection/challenges/floor_hazard.png"
     },
     {
@@ -22,12 +22,12 @@
     },
     {
       "title": "Renovations",
-      "rules": "The \u2014 of offices is disabled this month",
+      "rules": "The left half of offices is disabled this month",
       "image": "assets/images/collection/challenges/renovations.png"
     },
     {
       "title": "Sinkhole",
-      "rules": "Unoccupied tiles just \u2014 the center factory floor tile are disabled this month",
+      "rules": "Unoccupied tiles just %s the center factory floor tile are disabled this month",
       "image": "assets/images/collection/challenges/sinkhole.png"
     },
     {
@@ -39,42 +39,42 @@
   "components": [
     {
       "title": "Red Conveyor",
-      "rules": "Adds 1 to numbers that are moved onto it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it (twice to red numbers), and moves them rightward",
       "image": "assets/images/collection/components/conveyor_red_normal.png"
     },
     {
       "title": "Blue Conveyor",
-      "rules": "Adds 1 to numbers that are moved onto it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it (twice to blue numbers), and moves them rightward",
       "image": "assets/images/collection/components/conveyor_blue_normal.png"
     },
     {
       "title": "Green Conveyor",
-      "rules": "Adds 1 to numbers that are moved onto it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it (twice to green numbers), and moves them rightward",
       "image": "assets/images/collection/components/conveyor_green_normal.png"
     },
     {
       "title": "Yellow Conveyor",
-      "rules": "Adds 1 to numbers that are moved onto it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it (twice to yellow numbers), and moves them rightward",
       "image": "assets/images/collection/components/conveyor_yellow_normal.png"
     },
     {
       "title": "Red Packager",
-      "rules": "Adds 1 to numbers moved onto it (twice to \u2014 numbers), and converts them into \u2014 score multiplier",
+      "rules": "Adds 1 to numbers moved onto it (twice to red numbers), and converts them into red score multiplier",
       "image": "assets/images/collection/components/packager_red_normal.png"
     },
     {
       "title": "Blue Packager",
-      "rules": "Adds 1 to numbers moved onto it (twice to \u2014 numbers), and converts them into \u2014 score multiplier",
+      "rules": "Adds 1 to numbers moved onto it (twice to blue numbers), and converts them into blue score multiplier",
       "image": "assets/images/collection/components/packager_blue_normal.png"
     },
     {
       "title": "Green Packager",
-      "rules": "Adds 1 to numbers moved onto it (twice to \u2014 numbers), and converts them into \u2014 score multiplier",
+      "rules": "Adds 1 to numbers moved onto it (twice to green numbers), and converts them into green score multiplier",
       "image": "assets/images/collection/components/packager_green_normal.png"
     },
     {
       "title": "Yellow Packager",
-      "rules": "Adds 1 to numbers moved onto it (twice to \u2014 numbers), and converts them into \u2014 score multiplier",
+      "rules": "Adds 1 to numbers moved onto it (twice to yellow numbers), and converts them into yellow score multiplier",
       "image": "assets/images/collection/components/packager_yellow_normal.png"
     },
     {
@@ -99,144 +99,144 @@
     },
     {
       "title": "Red Divider",
-      "rules": "Adds 1 to numbers that are moved onto it from \u2014 (twice to \u2014 numbers) and",
+      "rules": "Adds 1 to numbers that are moved onto it from the left (twice to red numbers) and",
       "image": "assets/images/collection/components/divider_red_normal.png"
     },
     {
       "title": "Blue Divider",
-      "rules": "Adds 1 to numbers that are moved onto it from \u2014 (twice to \u2014 numbers) and",
+      "rules": "Adds 1 to numbers that are moved onto it from the left (twice to blue numbers) and",
       "image": "assets/images/collection/components/divider_blue_normal.png"
     },
     {
       "title": "Green Divider",
-      "rules": "Adds 1 to numbers that are moved onto it from \u2014 (twice to \u2014 numbers) and",
+      "rules": "Adds 1 to numbers that are moved onto it from the left (twice to green numbers) and",
       "image": "assets/images/collection/components/divider_green_normal.png"
     },
     {
       "title": "Yellow Divider",
-      "rules": "Adds 1 to numbers that are moved onto it from \u2014 (twice to \u2014 numbers) and",
+      "rules": "Adds 1 to numbers that are moved onto it from the left (twice to yellow numbers) and",
       "image": "assets/images/collection/components/divider_yellow_normal.png"
     },
     {
       "title": "Red Launcher",
-      "rules": "Adds 1 to numbers that are moved onto it or the tile \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the tile red it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/launcher_red_normal.png"
     },
     {
       "title": "Blue Launcher",
-      "rules": "Adds 1 to numbers that are moved onto it or the tile \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the tile blue it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/launcher_blue_normal.png"
     },
     {
       "title": "Green Launcher",
-      "rules": "Adds 1 to numbers that are moved onto it or the tile \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the tile green it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/launcher_green_normal.png"
     },
     {
       "title": "Yellow Launcher",
-      "rules": "Adds 1 to numbers that are moved onto it or the tile \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the tile yellow it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/launcher_yellow_normal.png"
     },
     {
       "title": "Red Attractor",
-      "rules": "Adds 1 to numbers that are moved onto it or the two tiles \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the two tiles red it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/attractor_red_normal.png"
     },
     {
       "title": "Blue Attractor",
-      "rules": "Adds 1 to numbers that are moved onto it or the two tiles \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the two tiles blue it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/attractor_blue_normal.png"
     },
     {
       "title": "Green Attractor",
-      "rules": "Adds 1 to numbers that are moved onto it or the two tiles \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the two tiles green it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/attractor_green_normal.png"
     },
     {
       "title": "Yellow Attractor",
-      "rules": "Adds 1 to numbers that are moved onto it or the two tiles \u2014 it (twice to \u2014 numbers), and moves them \u2014",
+      "rules": "Adds 1 to numbers that are moved onto it or the two tiles yellow it (twice to rightward numbers), and moves them %s",
       "image": "assets/images/collection/components/attractor_yellow_normal.png"
     }
   ],
   "component_upgrades": [
     {
       "title": "Common Self Buff",
-      "rules": "This component gets",
+      "rules": "This component gets +4",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_boost_common.png"
     },
     {
       "title": "Uncommon Self Buff",
-      "rules": "This component gets",
+      "rules": "This component gets +6",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_boost_uncommon.png"
     },
     {
       "title": "Rare Self Buff",
-      "rules": "This component gets",
+      "rules": "This component gets +8",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_boost_rare.png"
     },
     {
       "title": "Legendary Self Buff",
-      "rules": "This component gets",
+      "rules": "This component gets +10",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_boost_legendary.png"
     },
     {
       "title": "Common Row Buff",
-      "rules": "Components in the same row as this one get",
+      "rules": "Components in the same row as this one get +1",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_horiz_common.png"
     },
     {
       "title": "Uncommon Row Buff",
-      "rules": "Components in the same row as this one get",
+      "rules": "Components in the same row as this one get +2",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_horiz_uncommon.png"
     },
     {
       "title": "Rare Row Buff",
-      "rules": "Components in the same row as this one get",
+      "rules": "Components in the same row as this one get +3",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_horiz_rare.png"
     },
     {
       "title": "Legendary Row Buff",
-      "rules": "Components in the same row as this one get",
+      "rules": "Components in the same row as this one get +4",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_horiz_legendary.png"
     },
     {
       "title": "Common Column Buff",
-      "rules": "Components in the same column as this one get",
+      "rules": "Components in the same column as this one get +1",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_vert_common.png"
     },
     {
       "title": "Uncommon Column Buff",
-      "rules": "Components in the same column as this one get",
+      "rules": "Components in the same column as this one get +2",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_vert_uncommon.png"
     },
     {
       "title": "Rare Column Buff",
-      "rules": "Components in the same column as this one get",
+      "rules": "Components in the same column as this one get +3",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_vert_rare.png"
     },
     {
       "title": "Legendary Column Buff",
-      "rules": "Components in the same column as this one get",
+      "rules": "Components in the same column as this one get +4",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_vert_legendary.png"
     },
     {
       "title": "Common Adjacent Buff",
-      "rules": "Adjacent components get",
+      "rules": "Adjacent components get +1",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_adjacent_common.png"
     },
     {
       "title": "Uncommon Adjacent Buff",
-      "rules": "Adjacent components get",
+      "rules": "Adjacent components get +2",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_adjacent_uncommon.png"
     },
     {
       "title": "Rare Adjacent Buff",
-      "rules": "Adjacent components get",
+      "rules": "Adjacent components get +3",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_adjacent_rare.png"
     },
     {
       "title": "Legendary Adjacent Buff",
-      "rules": "Adjacent components get",
+      "rules": "Adjacent components get +4",
       "image": "assets/images/collection/component_upgrades/comp_upgrade_adjacent_legendary.png"
     }
   ],
@@ -305,107 +305,107 @@
   "workers": [
     {
       "title": "Accountant",
-      "rules": "",
+      "rules": "Upon entering the store, gain 1% interest on held money",
       "image": "assets/images/collection/workers/accountant.png"
     },
     {
       "title": "Janitor",
-      "rules": "",
+      "rules": "\u26a11 for each number left unpacked on the factory floor",
       "image": "assets/images/collection/workers/janitor.png"
     },
     {
       "title": "Maintenance",
-      "rules": "",
+      "rules": "\u26a11",
       "image": "assets/images/collection/workers/maintenance.png"
     },
     {
       "title": "Marketer",
-      "rules": "",
+      "rules": "Workers sell for \u26a11 more",
       "image": "assets/images/collection/workers/marketer.png"
     },
     {
       "title": "Red Mechanic",
-      "rules": "",
+      "rules": "Red components get +1",
       "image": "assets/images/collection/workers/red_mechanic.png"
     },
     {
       "title": "Blue Mechanic",
-      "rules": "",
+      "rules": "Blue components get +1",
       "image": "assets/images/collection/workers/blue_mechanic.png"
     },
     {
       "title": "Green Mechanic",
-      "rules": "",
+      "rules": "Green components get +1",
       "image": "assets/images/collection/workers/green_mechanic.png"
     },
     {
       "title": "Yellow Mechanic",
-      "rules": "",
+      "rules": "Yellow components get +1",
       "image": "assets/images/collection/workers/yellow_mechanic.png"
     },
     {
       "title": "Up Lineworker",
-      "rules": "",
+      "rules": "Up-facing components get +1",
       "image": "assets/images/collection/workers/up_lineworker.png"
     },
     {
       "title": "Down Lineworker",
-      "rules": "",
+      "rules": "Down-facing components get +1",
       "image": "assets/images/collection/workers/down_lineworker.png"
     },
     {
       "title": "Left Lineworker",
-      "rules": "",
+      "rules": "Left-facing components get +1",
       "image": "assets/images/collection/workers/left_lineworker.png"
     },
     {
       "title": "Right Lineworker",
-      "rules": "",
+      "rules": "Right-facing components get +1",
       "image": "assets/images/collection/workers/right_lineworker.png"
     },
     {
       "title": "Capacity Manager",
-      "rules": "",
+      "rules": "Components on the highlighted factory tiles increment an additional 1 time1.0",
       "image": "assets/images/collection/workers/capacity_manager.png"
     },
     {
       "title": "Distribution Manager",
-      "rules": "",
+      "rules": "Components on the highlighted factory tiles increment an additional 1 time1.0",
       "image": "assets/images/collection/workers/distribution_manager.png"
     },
     {
       "title": "Logistics Manager",
-      "rules": "",
+      "rules": "Components on the highlighted factory tiles increment an additional 1 time1.0",
       "image": "assets/images/collection/workers/logistics_manager.png"
     },
     {
       "title": "Upper Level Manager",
-      "rules": "",
+      "rules": "Components on the highlighted factory tiles increment an additional 1 time1.0",
       "image": "assets/images/collection/workers/upper_level_manager.png"
     },
     {
       "title": "Lower Level Manager",
-      "rules": "",
+      "rules": "Components on the highlighted factory tiles increment an additional 1 time1.0",
       "image": "assets/images/collection/workers/lower_level_manager.png"
     },
     {
       "title": "Welding Manager",
-      "rules": "",
+      "rules": "Components on the highlighted factory tiles increment an additional 1 time1.0",
       "image": "assets/images/collection/workers/welding_manager.png"
     },
     {
       "title": "Transport Manager",
-      "rules": "",
+      "rules": "Components on the highlighted factory tiles increment an additional 1 time1.0",
       "image": "assets/images/collection/workers/transport_manager.png"
     },
     {
       "title": "Headhunter",
-      "rules": "",
+      "rules": "Add 3+1.0 rare pips to each pack distribution",
       "image": "assets/images/collection/workers/headhunter.png"
     },
     {
       "title": "Receptionist",
-      "rules": "",
+      "rules": "Packs cost \u26a11 less",
       "image": "assets/images/collection/workers/receptionist.png"
     },
     {
@@ -415,22 +415,22 @@
     },
     {
       "title": "Component Developer",
-      "rules": "",
+      "rules": "Components cost \u26a11 less",
       "image": "assets/images/collection/workers/component_developer.png"
     },
     {
       "title": "Operation Developer",
-      "rules": "",
+      "rules": "Operations cost \u26a11 less",
       "image": "assets/images/collection/workers/operation_developer.png"
     },
     {
       "title": "Vertical Director",
-      "rules": "",
+      "rules": "Workers below this one get +1.0",
       "image": "assets/images/collection/workers/vertical_director.png"
     },
     {
       "title": "Horizontal Director",
-      "rules": "",
+      "rules": "+1.0",
       "image": "assets/images/collection/workers/horizontal_director.png"
     },
     {
@@ -445,47 +445,47 @@
     },
     {
       "title": "Receiving Supervisor",
-      "rules": "",
+      "rules": "The worker directly to the right of this one gets +1 and +1",
       "image": "assets/images/collection/workers/receiving_supervisor.png"
     },
     {
       "title": "Safety Supervisor",
-      "rules": "",
+      "rules": "The worker directly below this one gets +1 and +1",
       "image": "assets/images/collection/workers/safety_supervisor.png"
     },
     {
       "title": "Red Researcher",
-      "rules": "",
+      "rules": "Get \u26a11 per red number packaged",
       "image": "assets/images/collection/workers/red_researcher.png"
     },
     {
       "title": "Green Researcher",
-      "rules": "",
+      "rules": "Green conveyor activations score +1 green score multiplier",
       "image": "assets/images/collection/workers/green_researcher.png"
     },
     {
       "title": "Blue Researcher",
-      "rules": "",
+      "rules": "Blue conveyors increment blue numbers an additional 1 time1.0",
       "image": "assets/images/collection/workers/blue_researcher.png"
     },
     {
       "title": "Yellow Researcher",
-      "rules": "",
+      "rules": "Numbers that absorb others on a yellow tile are multiplied by 1",
       "image": "assets/images/collection/workers/yellow_researcher.png"
     },
     {
       "title": "Assembler",
-      "rules": "",
+      "rules": "Your max hand size gets +1",
       "image": "assets/images/collection/workers/assembler.png"
     },
     {
       "title": "Graphic Designer",
-      "rules": "",
+      "rules": "You cannot draw 1.0 components",
       "image": "assets/images/collection/workers/graphic_designer.png"
     },
     {
       "title": "Inventory Clerk",
-      "rules": "",
+      "rules": "Stationary numbers get packaged by the first Packager in the same 1.0 as them",
       "image": "assets/images/collection/workers/inventory_clerk.png"
     },
     {
@@ -495,42 +495,42 @@
     },
     {
       "title": "Packaging Specialist",
-      "rules": "",
+      "rules": "Fabricators get +1 for every Packager on the factory floor",
       "image": "assets/images/collection/workers/packaging_specialist.png"
     },
     {
       "title": "Liquidation Developer",
-      "rules": "",
+      "rules": "\u26a11",
       "image": "assets/images/collection/workers/liquidation_developer.png"
     },
     {
       "title": "Industrial Engineer",
-      "rules": "Copying the \u2014 directly above: \u2014",
+      "rules": "Copying the 1.0 directly above: 1.0",
       "image": "assets/images/collection/workers/industrial_engineer.png"
     },
     {
       "title": "Mechanical Engineer",
-      "rules": "Copying the \u2014 directly to the left: \u2014",
+      "rules": "Copying the 1.0 directly to the left: 1.0",
       "image": "assets/images/collection/workers/mechanical_engineer.png"
     },
     {
       "title": "Chemical Engineer",
-      "rules": "Copying the \u2014 diagonally to the top left: \u2014",
+      "rules": "Copying the 1.0 diagonally to the top left: 1.0",
       "image": "assets/images/collection/workers/chemical_engineer.png"
     },
     {
       "title": "Automation Technician",
-      "rules": "",
+      "rules": "Whenever numbers combine, conveyors get +1 until the end of the month",
       "image": "assets/images/collection/workers/automation_technician.png"
     },
     {
       "title": "Instrumentation Technician",
-      "rules": "",
+      "rules": "Whenever a number changes color, conveyors get +1 until the end of the month",
       "image": "assets/images/collection/workers/instrumentation_technician.png"
     },
     {
       "title": "Mechatronics Technician",
-      "rules": "",
+      "rules": "+1 until the end of the month",
       "image": "assets/images/collection/workers/mechatronics_technician.png"
     },
     {
@@ -540,17 +540,17 @@
     },
     {
       "title": "Chief Executive Officer",
-      "rules": "",
+      "rules": "Workers in the row below this one get +1.0",
       "image": "assets/images/collection/workers/chief_executive_officer.png"
     },
     {
       "title": "Data Scientist",
-      "rules": "",
+      "rules": "+1 max refill1.0",
       "image": "assets/images/collection/workers/data_scientist.png"
     },
     {
       "title": "Fabrication Specialist",
-      "rules": "",
+      "rules": "Fabricators produce 1.0 additional numbers",
       "image": "assets/images/collection/workers/fabrication_specialist.png"
     },
     {
@@ -560,7 +560,7 @@
     },
     {
       "title": "Replication Developer",
-      "rules": "",
+      "rules": "1 1.0 of the embedded component to your deck",
       "image": "assets/images/collection/workers/replication_developer.png"
     },
     {

@@ -354,6 +354,7 @@ button:focus {
 
 .about-icon-col {
     flex-shrink: 0;
+    margin-top: 30px;
 }
 
 .about-bg {
@@ -495,6 +496,22 @@ a:link {
     flex-shrink: 0;
     width: 84px;
     height: 84px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Upgrade images: trim to top-left 1/4, display at 4x (emblem only, no transparent padding) */
+.collection-piece-img-upgrade {
+    width: 84px;
+    height: 84px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.collection-piece-img-upgrade .collection-piece-img {
+    width: 84px;
+    height: 84px;
+    transform: scale(4);
+    transform-origin: top left;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
