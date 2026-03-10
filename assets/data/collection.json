@@ -415,12 +415,12 @@
     },
     {
       "title": "Component Developer",
-      "rules": "Components cost \u26a11 less",
+      "rules": "Can embed a component from your hand. Components cost \u26a11 less",
       "image": "assets/images/collection/workers/component_developer.png"
     },
     {
       "title": "Operation Developer",
-      "rules": "Operations cost \u26a11 less",
+      "rules": "Can embed an operation from the store. Operations cost \u26a11 less",
       "image": "assets/images/collection/workers/operation_developer.png"
     },
     {
@@ -560,7 +560,7 @@
     },
     {
       "title": "Replication Developer",
-      "rules": "Can embed a component from your hand",
+      "rules": "Can embed a component from your hand. Upon entering the store, add 1 copy of the embedded component to your deck",
       "image": "assets/images/collection/workers/replication_developer.png"
     },
     {

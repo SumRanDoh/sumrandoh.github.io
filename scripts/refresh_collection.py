@@ -168,7 +168,9 @@ def polish_rules_for_website(rules: str, variant: str, category: str) -> str:
         "Chef": "Non-upgraded corners of Workers in the top row act upgraded, giving +1",
         "ProcurementAgent": "Fabricators produce numbers out of all sides",
         "RoboticsExpert": "Duplicate workers can appear in the store or in packs",
-        "ReplicationDeveloper": "Can embed a component from your hand",
+        "ComponentDeveloper": "Can embed a component from your hand. Components cost ⚡1 less",
+        "OperationDeveloper": "Can embed an operation from the store. Operations cost ⚡1 less",
+        "ReplicationDeveloper": "Can embed a component from your hand. Upon entering the store, add 1 copy of the embedded component to your deck",
         "IndustrialEngineer": "Copy the worker directly above this one",
         "MechanicalEngineer": "Copy the worker directly to the left of this one",
         "ChemicalEngineer": "Copy the worker diagonally to the top left of this one",
@@ -202,7 +204,10 @@ def polish_rules_for_website(rules: str, variant: str, category: str) -> str:
         len(rules.strip()) < 20 or
         "Copying the 1 " in rules or
         "1 1 of the embedded" in rules or
-        (variant == "MechatronicsTechnician" and "conveyors" not in rules)
+        (variant == "MechatronicsTechnician" and "conveyors" not in rules) or
+        (variant == "ComponentDeveloper" and "Can embed" not in rules) or
+        (variant == "OperationDeveloper" and "Can embed" not in rules) or
+        (variant == "ReplicationDeveloper" and "Upon entering" not in rules)
     ):
         return WORKER_FALLBACKS[variant]
     return rules
