@@ -596,18 +596,18 @@ a:link {
     position: sticky;
     top: 56px;
     z-index: 1020;
-    padding-top: 28px;
-    padding-bottom: 28px;
+    padding: 8px 0;
+    min-height: 52px;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .collection-section.bg-dark .collection-section-title {
     background-color: #343a40;
-    padding-top: 16px;
-    padding-bottom: 16px;
 }
 .collection-section.bg-secondary .collection-section-title {
     background-color: #222222;
-    padding-bottom: 16px;
 }
 .collection-list {
     display: flex;
