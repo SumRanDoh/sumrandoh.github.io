@@ -390,6 +390,57 @@ button:focus {
     display: none;
 }
 
+/* Blog dropdown: same structure as Prismatics, colorful items */
+.blog-dropdown {
+    position: relative;
+}
+.blog-dropdown > .nav-link::after {
+    content: '\25BC';
+    font-size: 0.5em;
+    margin-left: 4px;
+    vertical-align: middle;
+    opacity: 0.8;
+}
+.blog-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: max-content;
+    padding: 0.5rem 0;
+    margin-top: -2px;
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.blog-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+}
+.blog-dropdown:hover .blog-dropdown-menu {
+    display: block;
+}
+.blog-dropdown-menu .dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 24px;
+    white-space: nowrap;
+}
+.blog-dropdown-item.blog-dropdown-green { color: #25BF17; }
+.blog-dropdown-item.blog-dropdown-green:hover { background-color: #444; color: #25BF17; }
+.blog-dropdown-item.blog-dropdown-red { color: #F73131; }
+.blog-dropdown-item.blog-dropdown-red:hover { background-color: #444; color: #F73131; }
+.blog-dropdown-item.blog-dropdown-blue { color: #3B8DE8; }
+.blog-dropdown-item.blog-dropdown-blue:hover { background-color: #444; color: #3B8DE8; }
+.blog-post-mobile {
+    display: none;
+}
+
 /*::::::::::::::::::::::::::::::::::::
    About Area
 ::::::::::::::::::::::::::::::::::::*/

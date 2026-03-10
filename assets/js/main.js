@@ -17,14 +17,18 @@
     });
 
 
-    // Smooth Scroll
+    // Direct scroll (instant, no animation)
     $(function () {
         $('.nav-link, .smoth-scroll').on('click', function (event) {
             var $anchor = $(this);
-            $('html, body').stop().animate({
-                scrollTop: $($anchor.attr('href')).offset().top - 0
-            }, 1000);
-            event.preventDefault();
+            var href = $anchor.attr('href');
+            if (href && href.indexOf('#') === 0) {
+                var $target = $(href);
+                if ($target.length) {
+                    $('html, body').scrollTop($target.offset().top);
+                    event.preventDefault();
+                }
+            }
         });
     });
 

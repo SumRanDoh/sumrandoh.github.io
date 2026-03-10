@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="assets/css/lightbox.min.css" />
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css" />
     <link rel="stylesheet" href="assets/css/animate.css" />
-    <link rel="stylesheet" href="style.css?v=29" />
-    <link rel="stylesheet" href="assets/css/responsive.css?v=29" />
+    <link rel="stylesheet" href="style.css?v=31" />
+    <link rel="stylesheet" href="assets/css/responsive.css?v=31" />
   </head>
 
   <body data-spy="scroll" data-target=".navbar-nav">
@@ -90,8 +90,22 @@
               <li class="nav-item prismatics-category-mobile">
                 <a class="nav-link" href="#collection-challenges">Challenges</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item dropdown blog-dropdown">
                 <a class="nav-link" href="#blog">Blog</a>
+                <div class="dropdown-menu blog-dropdown-menu">
+                  <a class="dropdown-item blog-dropdown-item blog-dropdown-green" href="#3-5-2025">3/5/2025: Singularity</a>
+                  <a class="dropdown-item blog-dropdown-item blog-dropdown-red" href="#1-7-2026">1/7/2026: Art and Music!</a>
+                  <a class="dropdown-item blog-dropdown-item blog-dropdown-blue" href="#8-19-2025">8/19/2025: Prismatics</a>
+                </div>
+              </li>
+              <li class="nav-item blog-post-mobile">
+                <a class="nav-link blog-post-green" href="#3-5-2025">3/5/2025: Singularity</a>
+              </li>
+              <li class="nav-item blog-post-mobile">
+                <a class="nav-link blog-post-red" href="#1-7-2026">1/7/2026: Art and Music!</a>
+              </li>
+              <li class="nav-item blog-post-mobile">
+                <a class="nav-link blog-post-blue" href="#8-19-2025">8/19/2025: Prismatics</a>
               </li>
             </ul>
           </div>
@@ -1111,7 +1125,7 @@
                     </div>
                     <div>
                         <p class="blog-content">
-&nbsp;&nbsp;&nbsp;&nbsp;I've discovered Cursor. It's a 'fork' of my favorite software for programming: VSCode, which in this case means Cursor lets me write code with an AI that has access to the folder I'm coding my game in. And it has made all the difference. Like, holy shiznit. It feels like I was debugging Prismatics as one would clean a bathroom with a toothbrush and someone just handed me a power washer.<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;I've discovered Cursor. It's a fork of my favorite software for programming: VSCode, which in this case means Cursor lets me write code with an AI that has access to the folder I'm coding my game in. And it has made all the difference. Like, holy shiznit. It feels like I was debugging Prismatics as one would clean a bathroom with a toothbrush and someone just handed me a power washer.<br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;One of my big goals with Prismatics from the start has been to make the game's score ceiling as high as possible for the sake of Endless Mode. But the scores Snailman and I were achieving in testing were too high to be stored in single variables in the Godot file: huge exponents like 2.34*10<sup>18</sup> that needed to be accurately compared to other huge exponents like (2.34*10<sup>18</sup>)+2. It made sense to me that solving this was possible with some fancy math that would break my feeble mind, so it hung over me as a stretch goal as I made the rest of the game.<br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Since the rise of ChatGPT, the extent to which I had been able to get AI to help me finish this kind of ambitious mechanic was copying snippets of code to and from my ChatGPT window. It will write you a great file to copy-paste if you describe exactly what you need perfectly along with re-describing your entire codebase everytime. Cursor is essentially a ChatGPT that flawlessly abstracts that all away. I don't need to describe my codebase well, or even at all. I don't really need to know how it's organized anymore.<br><br>
 I don't even need to learn to use Cursor as much as ask it to cater to me.<br><br>

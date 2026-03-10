@@ -66,6 +66,18 @@
     .prismatics-dropdown > .nav-link::after {
         display: none;
     }
+    .blog-dropdown .blog-dropdown-menu {
+        display: none !important;
+    }
+    .blog-post-mobile {
+        display: block;
+    }
+    .blog-dropdown > .nav-link::after {
+        display: none;
+    }
+    .nav-link.blog-post-green { color: #25BF17; }
+    .nav-link.blog-post-red { color: #F73131; }
+    .nav-link.blog-post-blue { color: #3B8DE8; }
     button.navbar-toggler {
         color: #fff;
     }
