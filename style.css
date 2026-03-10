@@ -339,6 +339,57 @@ button:focus {
     background-color: #222222;
 }
 
+/* Prismatics dropdown: show on hover (desktop only) */
+.prismatics-dropdown {
+    position: relative;
+}
+.prismatics-dropdown > .nav-link::after {
+    content: '\25BC';
+    font-size: 0.5em;
+    margin-left: 4px;
+    vertical-align: middle;
+    opacity: 0.8;
+}
+.prismatics-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 180px;
+    padding: 0.5rem 0;
+    margin-top: -2px;
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.prismatics-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+}
+.prismatics-dropdown:hover .prismatics-dropdown-menu {
+    display: block;
+}
+.prismatics-dropdown-menu .dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #fff;
+    font-size: 24px;
+    white-space: nowrap;
+}
+.prismatics-dropdown-menu .dropdown-item:hover {
+    background-color: #444;
+    color: #FFA500;
+}
+/* Hide flat category links on desktop */
+.prismatics-category-mobile {
+    display: none;
+}
+
 /*::::::::::::::::::::::::::::::::::::
    About Area
 ::::::::::::::::::::::::::::::::::::*/
@@ -354,7 +405,7 @@ button:focus {
 
 .about-icon-col {
     flex-shrink: 0;
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 .about-bg {
@@ -500,6 +551,12 @@ a:link {
     image-rendering: crisp-edges;
 }
 
+/* Workers at 2x size */
+.collection-item-worker .collection-piece-img {
+    width: 168px;
+    height: 168px;
+}
+
 /* Upgrade images: trim to top-left 1/4, display at 4x (emblem only, no transparent padding) */
 .collection-piece-img-upgrade {
     width: 84px;
@@ -519,9 +576,9 @@ a:link {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    text-align: center;
+    text-align: left;
     gap: 0.5rem;
 }
 .collection-piece-title {

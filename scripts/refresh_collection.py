@@ -15,6 +15,12 @@ import json
 import shutil
 from pathlib import Path
 
+try:
+    from PIL import Image
+    HAS_PIL = True
+except ImportError:
+    HAS_PIL = False
+
 GAME_REPO = Path("/Users/caleb/Prismatics/prismatics")
 WEBSITE = Path(__file__).resolve().parent.parent
 
@@ -93,8 +99,12 @@ def apply_rules_defaults(text: str, category: str, variant: str = "", color: str
     if category == "Component":
         text = re.sub(r"%d", "1", text)
         # Replace %s in order: Conveyor (color, direction), Packager (direction_from, color, color), Fabricator (direction)
+        # Launcher/Attractor: "the tile %s it" or "the two tiles %s it" -> from_dir (to the right of, above, etc)
+        from_dir = "to the right of"  # default for facing right
         replacements = []
-        if "from %s" in text:
+        if "the tile %s it" in text or "the two tiles %s it" in text:
+            replacements = [from_dir, color, direction]  # Launcher, Attractor
+        elif "from %s" in text:
             replacements = [direction_from, color, color]  # Packager with direction
         elif "into %s score multiplier" in text:
             replacements = [color, color]  # Packager (LoadPlanner variant)
@@ -111,20 +121,34 @@ def apply_rules_defaults(text: str, category: str, variant: str = "", color: str
     elif category == "Challenge":
         if "corner" in text:
             text = text.replace("%s", "top left")
-        elif "tiles" in text:
-            text = text.replace("%d", "5")
+        elif "just" in text:
+            text = text.replace("%s", "above")  # Sinkhole
+        elif "tiles" in text and "%d" in text:
+            text = text.replace("%d", "5")  # Floor Hazard
         elif "offices" in text:
             text = text.replace("%s", "left half")
-        elif "just" in text or "Sinkhole" in variant:
-            text = text.replace("%s", "above")
         else:
             text = re.sub(r"%d", "1", text)
             text = re.sub(r"%s", "—", text)
     elif category == "Worker":
-        text = re.sub(r"%0\.0f%%", "10%", text)
+        text = re.sub(r"%0\.0f%%", "10%", text)  # Accountant: interest
         text = re.sub(r"%0\.0f", "1", text)
         text = re.sub(r"%d", "1", text)
-        text = re.sub(r"%s", "1.0", text)
+        if "same %s as" in text:
+            text = text.replace("%s", "row or column", 1)
+        elif "cannot draw %s" in text:
+            text = text.replace("%s", "one color of", 1)
+        else:
+            text = re.sub(r"%s", "1", text)  # version_color, plrl, n - use 1 as default
+    elif category == "WorkerUpgrade":
+        if "directly %s" in text:
+            text = text.replace("%s", "to the right of", 1)
+        elif "two offices %s" in text:
+            text = text.replace("%s", "to the right of", 1)
+        else:
+            text = re.sub(r"%s", "—", text)
+        text = re.sub(r"%d", "1", text)
+        text = re.sub(r"%0\.0f", "1", text)
     else:
         text = re.sub(r"%d", "1", text)
         text = re.sub(r"%0\.0f", "1", text)
@@ -133,14 +157,61 @@ def apply_rules_defaults(text: str, category: str, variant: str = "", color: str
     return strip_bbcode(text)
 
 
+def polish_rules_for_website(rules: str, variant: str, category: str) -> str:
+    """Clean up rules for website display - fix placeholders, truncation, and unclear text."""
+    WORKER_FALLBACKS = {
+        "Recruiter": "Add 1 uncommon, 1 rare, & 1 legendary pip to each pack distribution",
+        "DivisionOverseer": "Non-upgraded corners of the Worker to the left of this one act upgraded, giving +1",
+        "SectionOverseer": "Non-upgraded corners of the Worker above this one act upgraded, giving +1",
+        "HorizontalDirector": "Workers to the right of this one get +1",
+        "LoadPlanner": "Packagers can accept numbers from any direction",
+        "Chef": "Non-upgraded corners of Workers in the top row act upgraded, giving +1",
+        "ProcurementAgent": "Fabricators produce numbers out of all sides",
+        "RoboticsExpert": "Duplicate workers can appear in the store or in packs",
+        "ReplicationDeveloper": "Can embed a component from your hand",
+        "IndustrialEngineer": "Copy the worker directly above this one",
+        "MechanicalEngineer": "Copy the worker directly to the left of this one",
+        "ChemicalEngineer": "Copy the worker diagonally to the top left of this one",
+        "LiquidationDeveloper": "Can embed a component from your hand. Upon entering the store, sell it for ⚡1",
+        "Maintenance": "The first component you discard each hand pays an additional ⚡1",
+        "ReceivingSupervisor": "The worker directly to the right of this one gets +1 and +1",
+        "SafetySupervisor": "The worker directly below this one gets +1 and +1",
+        "MechatronicsTechnician": "Whenever a number's movement direction changes, conveyors get +1 until the end of the month",
+    }
+    if not rules or not rules.strip():
+        return WORKER_FALLBACKS.get(variant, "")
+    # Fix common bad patterns from placeholder substitution
+    rules = re.sub(r"(\d) time1$", r"\1 time", rules)
+    rules = re.sub(r"(\d) time1\.0", r"\1 time", rules)
+    rules = re.sub(r"gain 1% interest", "gain 10% interest", rules)
+    rules = re.sub(r"Add (\d)\+1 rare", r"Add \1 rare", rules)
+    rules = re.sub(r"Add (\d)\+1\.0 rare", r"Add \1 rare", rules)
+    rules = re.sub(r"ontop", "on top", rules)
+    rules = re.sub(r"max refill1", "max refill", rules)
+    rules = re.sub(r"You cannot draw 1 components", "You cannot draw one color of components", rules)
+    rules = re.sub(r"in the same 1 as them", "in the same row or column as them", rules)
+    rules = re.sub(r"1 additional numbers", "1 additional number", rules)
+    # Override bad/truncated rules even when non-empty
+    if variant in WORKER_FALLBACKS and (
+        rules.strip() == "+1.0" or
+        len(rules.strip()) < 20 or
+        "Copying the 1 " in rules or
+        "1 1 of the embedded" in rules or
+        (variant == "MechatronicsTechnician" and "conveyors" not in rules)
+    ):
+        return WORKER_FALLBACKS[variant]
+    return rules
+
+
 def extract_rules_from_class(class_path: Path) -> str:
     """Extract rules = '...' or ret = '...' from a GDScript class file."""
     if not class_path.exists():
         return ""
     content = class_path.read_text()
-    m = re.search(r'''^\s*rules\s*=\s*['"](.+?)['"]''', content, re.MULTILINE | re.DOTALL)
+    # Use backreference \1 so "can't" doesn't end the match on the apostrophe
+    m = re.search(r'''^\s*rules\s*=\s*(["'])(.+?)\1''', content, re.MULTILINE | re.DOTALL)
     if m:
-        return m.group(1)
+        return m.group(2)
     # Workers use ret = '...' % [...] in set_rules(); find the main ret assignment
     for pattern in [
         r"var ret = '([^']*(?:\\.[^']*)*)'",
@@ -153,6 +224,66 @@ def extract_rules_from_class(class_path: Path) -> str:
             if len(s) > 15 and "%" in s:  # likely the rules string
                 return s
     return ""
+
+
+def add_emblem_outline(img_path: Path) -> bool:
+    """
+    Add an outline that hugs the shape of the emblem in upgrade images.
+    Draws in transparent pixels adjacent to non-transparent emblem pixels,
+    using the dominant non-black color. Does not cover the emblem's black edge.
+    """
+    if not HAS_PIL:
+        return False
+    try:
+        img = Image.open(img_path).convert("RGBA")
+        w, h = img.size
+        # Emblem is in top-left quarter
+        qw, qh = w // 4, h // 4
+        pixels = img.load()
+
+        # Find non-transparent pixels in top-left quarter and collect colors
+        opaque_pixels = []
+        opaque_set = set()
+        for y in range(qh):
+            for x in range(qw):
+                r, g, b, a = pixels[x, y]
+                if a > 128:
+                    opaque_pixels.append((x, y, (r, g, b, a)))
+                    opaque_set.add((x, y))
+
+        if not opaque_pixels:
+            return False
+
+        # Dominant non-black color (exclude near-black)
+        from collections import Counter
+        color_counts = Counter()
+        for _x, _y, (r, g, b, _a) in opaque_pixels:
+            if r + g + b > 30:  # not black
+                color_counts[(r, g, b)] += 1
+        if not color_counts:
+            return False
+        outline_color = color_counts.most_common(1)[0][0]
+
+        # Outline = transparent pixels adjacent to emblem (hug the shape)
+        # 8-neighbors (corners-included): don't cover any emblem pixels
+        outline_pixels = set()
+        for (x, y) in opaque_set:
+            for dx, dy in [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < w and 0 <= ny < h and (nx, ny) not in opaque_set:
+                    r, g, b, a = pixels[nx, ny]
+                    if a <= 128:  # transparent
+                        outline_pixels.add((nx, ny))
+
+        for (x, y) in outline_pixels:
+            if 0 <= x < w and 0 <= y < h:
+                pixels[x, y] = (*outline_color, 255)
+
+        img.save(img_path)
+        return True
+    except Exception as e:
+        print(f"  Warning: could not add outline to {img_path.name}: {e}")
+        return False
 
 
 def copy_images():
@@ -224,8 +355,17 @@ def copy_images():
         for suffix in ["_tl.png", "_tr.png", "_bl.png", "_br.png"]:
             src = wu_src / f"{img_base}{suffix}"
             if src.exists():
-                shutil.copy2(src, collection_dir / "worker_upgrades" / src.name)
+                dst = collection_dir / "worker_upgrades" / src.name
+                shutil.copy2(src, dst)
+                add_emblem_outline(dst)
                 break
+
+    # Add emblem outline to component upgrades (after copy)
+    for variant, img_prefix in COMP_UPGRADE_VARIANTS:
+        for r in RARITIES:
+            dst = collection_dir / "component_upgrades" / f"comp_upgrade_{img_prefix}_{r}.png"
+            if dst.exists():
+                add_emblem_outline(dst)
 
 
 def build_collection_data() -> dict:
@@ -238,7 +378,8 @@ def build_collection_data() -> dict:
     for v in CHALLENGE_VARIANTS:
         cls = classes_dir / "challenges" / f"{v}.gd"
         raw = extract_rules_from_class(cls)
-        rules = apply_rules_defaults(raw, "Challenge", variant=v)
+        rules = polish_rules_for_website(
+            apply_rules_defaults(raw, "Challenge", variant=v), v, "Challenge")
         data["challenges"].append({
             "title": to_title(v),
             "rules": rules,
@@ -247,11 +388,16 @@ def build_collection_data() -> dict:
 
     # Components
     data["components"] = []
+    divider_suffix = "divides them into three, moving those rightward, upward, & downward, respectively"
     for rarity, variant in COMPONENT_VARIANTS:
         for color in COMPONENT_COLORS:
             cls = classes_dir / "components" / f"{variant}.gd"
             raw = extract_rules_from_class(cls)
-            rules = apply_rules_defaults(raw, "Component", variant=variant, color=color)
+            if variant == "Divider" and raw and " and " in raw:
+                raw = raw + " " + divider_suffix  # Divider rules are split across two lines
+            rules = polish_rules_for_website(
+                apply_rules_defaults(raw, "Component", variant=variant, color=color),
+                variant, "Component")
             title = f"{color.capitalize()} {variant}"
             data["components"].append({
                 "title": title,
@@ -270,7 +416,7 @@ def build_collection_data() -> dict:
         for r in RARITIES:
             sb, ob = rarity_bonus[r]
             rules = base + f"+{sb}" if "This component" in base else base + f"+{ob}"
-            rules = strip_bbcode(rules)
+            rules = polish_rules_for_website(strip_bbcode(rules), variant, "ComponentUpgrade")
             data["component_upgrades"].append({
                 "title": f"{r.capitalize()} {variant_names[img_prefix]}",
                 "rules": rules,
@@ -283,7 +429,8 @@ def build_collection_data() -> dict:
         for v in tup[1:]:
             cls = classes_dir / "operations" / f"{v}.gd"
             raw = extract_rules_from_class(cls)
-            rules = apply_rules_defaults(raw, "Operation")
+            rules = polish_rules_for_website(
+                apply_rules_defaults(raw, "Operation"), v, "Operation")
             data["operations"].append({
                 "title": to_title(v),
                 "rules": rules,
@@ -296,7 +443,8 @@ def build_collection_data() -> dict:
         for v in variants:
             cls = classes_dir / "workers" / f"{v}.gd"
             raw = extract_rules_from_class(cls)
-            rules = apply_rules_defaults(raw, "Worker", variant=v)
+            rules = polish_rules_for_website(
+                apply_rules_defaults(raw, "Worker", variant=v), v, "Worker")
             img = f"assets/images/collection/workers/{to_snake(v)}.png"
             data["workers"].append({
                 "title": to_title(v),
@@ -323,7 +471,8 @@ def build_collection_data() -> dict:
                     found = f"assets/images/collection/worker_upgrades/{f.name}"
                     break
             raw = extract_rules_from_class(cls)
-            rules = apply_rules_defaults(raw, "WorkerUpgrade")
+            rules = polish_rules_for_website(
+                apply_rules_defaults(raw, "WorkerUpgrade"), v, "WorkerUpgrade")
             data["worker_upgrades"].append({
                 "title": to_title(v),
                 "rules": rules,
@@ -359,16 +508,18 @@ def generate_collection_html(data: dict) -> str:
         section_id = key.replace("_", "-")
         bg = bg_classes[i % len(bg_classes)]
         is_upgrade = key in ("component_upgrades", "worker_upgrades")
+        is_worker = key == "workers"
         items = []
         for piece in data[key]:
             img = piece.get("image", "")
             title_text = html_escape(piece.get("title", ""))
             rules = html_escape(piece.get("rules", ""))
+            item_class = "collection-item collection-item-worker" if is_worker else "collection-item"
             if is_upgrade:
                 img_html = f'<div class="collection-piece-img-upgrade"><img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy"></div>'
             else:
                 img_html = f'<img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy">'
-            items.append(f'''            <div class="collection-item">
+            items.append(f'''            <div class="{item_class}">
               {img_html}
               <div class="collection-piece-text">
                 <div class="collection-piece-title">{title_text}</div>

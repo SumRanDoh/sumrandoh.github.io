@@ -51,8 +51,20 @@
        Main Menu
     ::::::::::::::::::::::::::::::::::::*/
     .navbar.navbar-expand-md.fixed-top {
-        position: static;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
         background-color: #000;
+    }
+    /* Hide Prismatics dropdown on mobile; show flat category links */
+    .prismatics-dropdown .prismatics-dropdown-menu {
+        display: none !important;
+    }
+    .prismatics-category-mobile {
+        display: block;
+    }
+    .prismatics-dropdown > .nav-link::after {
+        display: none;
     }
     button.navbar-toggler {
         color: #fff;
