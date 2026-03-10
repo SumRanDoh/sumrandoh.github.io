@@ -592,11 +592,14 @@ a:link {
     font-size: 36px;
     text-align: center;
     margin-bottom: 2rem;
+    margin-top: 0;
     position: sticky;
     top: 56px;
     z-index: 1020;
-    padding: 24px 0;
-    margin-top: 0;
+    padding-top: 28px;
+    padding-bottom: 28px;
+    min-height: 92px;
+    box-sizing: border-box;
 }
 .collection-section.bg-dark .collection-section-title {
     background-color: #343a40;
