@@ -17,7 +17,7 @@
     });
 
 
-    // Direct scroll (instant, no animation)
+    // Direct scroll (instant, no animation); offset so target isn't under sticky header
     $(function () {
         $('.nav-link, .smoth-scroll').on('click', function (event) {
             var $anchor = $(this);
@@ -25,7 +25,8 @@
             if (href && href.indexOf('#') === 0) {
                 var $target = $(href);
                 if ($target.length) {
-                    $('html, body').scrollTop($target.offset().top);
+                    var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
+                    $('html, body').scrollTop(Math.max(0, $target.offset().top - offset));
                     event.preventDefault();
                 }
             }
