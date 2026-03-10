@@ -48,12 +48,6 @@
     }
 
     /*::::::::::::::::::::::::::::::::::::
-       Frequently asked questions
-    ::::::::::::::::::::::::::::::::::::*/
-    .faq-content {
-        margin-top: 15px;
-    }
-    /*::::::::::::::::::::::::::::::::::::
        Call to Action Area
     ::::::::::::::::::::::::::::::::::::*/
     .cta-button {
@@ -166,13 +160,10 @@
     }
 
     /*::::::::::::::::::::::::::::::::::::
-       Frequently asked questions
+       Prismatics blocks
     ::::::::::::::::::::::::::::::::::::*/
-    .faq-content {
-        margin-top: 15px;
-    }
-    .single-faq h4 {
-        font-size: 24px; /* never smaller than .faq-body (24px) */
+    .prismatics-block-title {
+        font-size: 24px;
     }
 
     /* Hide email in footer on mobile */
@@ -368,12 +359,6 @@
         height: 100%;
     }
 
-    /*::::::::::::::::::::::::::::::::::::
-       Frequently asked questions
-    ::::::::::::::::::::::::::::::::::::*/
-    .faq-content {
-        margin-top: 15px;
-    }
     /*::::::::::::::::::::::::::::::::::::
        Call to Action Area
     ::::::::::::::::::::::::::::::::::::*/

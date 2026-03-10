@@ -394,58 +394,42 @@ button:focus {
     background-color: #000;
 }
 
-#prismatics-image {
-  display: block;
-  margin-left: auto;   /* right-justify */
-  margin-right: 0;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+.prismatics-block {
+    margin-bottom: 2rem;
 }
 
-.faq-bg {
-    min-width: 200%;
-    min-height: 200%;
-    background-size: contain;
-    background-repeat: no-repeat;
+.prismatics-block:last-child {
+    margin-bottom: 0;
 }
 
-.faq-bg-2 {
-    min-width: 500px;
-    min-height: 500px;
-    display: block;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.single-faq {
-    font-size: 24px;
-}
-
-.single-faq h4 {
+.prismatics-block-title {
     color: #fff;
     background-color: #333;
-    margin-top: 4px;
+    margin-top: 0;
+    margin-bottom: 0;
     padding: 15px 15px 9px 15px;
     border: 2px solid #000;
-    cursor: pointer;
     font-weight: 400;
     font-size: 32px;
-    position: relative;
-    z-index: 1;
 }
 
-.single-faq h4:after {
-    display: none;
-}
-
-.faq-body {
+.prismatics-block-body {
     background: #3e3e3e;
     border: 2px solid #000;
+    border-top: none;
     color: #fff;
     padding: 20px 15px 11px 15px;
-    margin-bottom: 0px;
     font-size: 24px;
     line-height: 150%;
+}
+
+.prismatics-screenshot {
+    display: block;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: 0;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
 a:link {
