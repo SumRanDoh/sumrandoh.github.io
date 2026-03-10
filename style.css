@@ -343,6 +343,14 @@ button:focus {
 .prismatics-dropdown {
     position: relative;
 }
+.prismatics-dropdown > .nav-link {
+    background-color: transparent;
+}
+.prismatics-dropdown > .nav-link:hover,
+.prismatics-dropdown > .nav-link:focus,
+.prismatics-dropdown > .nav-link:active {
+    background-color: transparent;
+}
 .prismatics-dropdown > .nav-link::after {
     content: '';
     display: inline-block;
