@@ -6,27 +6,8 @@
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
 
-    /*::::::::::::::::::::::::::::::::::::
-       Main Menu
-    ::::::::::::::::::::::::::::::::::::*/
-    .navbar.navbar-expand-lg.fixed-top {
-        position: static;
-        background-color: #000;
-    }
-    button.navbar-toggler {
-        color: #fff;
-    }
+    /* Main menu: desktop nav now shows here (navbar-expand-md), so no mobile overrides */
 
-    .navbar-nav {
-        background-color: #333;
-        margin-top: 30px;
-    }
-    .nav-item {
-        border-bottom: 1px solid;
-    }
-    nav .main-menu .navbar-nav .nav-item .nav-link {
-        padding: 15px 15px;
-    }
     /*::::::::::::::::::::::::::::::::::::
        Hero Area 
     ::::::::::::::::::::::::::::::::::::*/
@@ -69,7 +50,7 @@
     /*::::::::::::::::::::::::::::::::::::
        Main Menu
     ::::::::::::::::::::::::::::::::::::*/
-    .navbar.navbar-expand-lg.fixed-top {
+    .navbar.navbar-expand-md.fixed-top {
         position: static;
         background-color: #000;
     }
@@ -164,6 +145,16 @@
     ::::::::::::::::::::::::::::::::::::*/
     .prismatics-block-title {
         font-size: 24px;
+    }
+
+    /* Collection sections – stack on mobile */
+    .collection-item {
+        flex-direction: column;
+        align-items: center;
+    }
+    .collection-piece-img {
+        width: 64px;
+        height: 64px;
     }
 
     /* Hide email in footer on mobile */
@@ -302,7 +293,7 @@
     /*::::::::::::::::::::::::::::::::::::
        Main Menu
     ::::::::::::::::::::::::::::::::::::*/
-    .navbar.navbar-expand-lg.fixed-top {
+    .navbar.navbar-expand-md.fixed-top {
         position: static;
         background-color: #000;
     }

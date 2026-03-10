@@ -1,0 +1,28 @@
+---
+description: Refresh website Collection from Prismatics game repo
+alwaysApply: false
+---
+
+# Refresh Collection
+
+When the user asks to **refresh my collection** (or similar: "refresh collection", "sync collection", "update collection from game"):
+
+1. **Run the refresh script**
+   ```bash
+   python3 scripts/refresh_collection.py
+   ```
+
+2. **What it does**
+   - Copies game piece images from `/Users/caleb/Prismatics/prismatics/assets/images/` to `assets/images/collection/`
+   - Extracts titles and rules from game class files
+   - Updates `assets/data/collection.json`
+   - Replaces the collection sections in `index.html` between `<!-- COLLECTION_SECTIONS_START -->` and `<!-- COLLECTION_SECTIONS_END -->`
+
+3. **If the script fails**
+   - Check that the Prismatics game repo exists at `/Users/caleb/Prismatics/prismatics/`
+   - Ensure `parameters.gd` and class files match the expected structure
+   - Fix any new piece types by updating `scripts/refresh_collection.py` (CHALLENGE_VARIANTS, COMPONENT_VARIANTS, WORKER_VARIANTS, etc.)
+
+4. **After refresh**
+   - Bump CSS cache-buster in index.html if you changed styles
+   - Do not mention the refresh in commit messages unless it's the main change
