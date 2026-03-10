@@ -598,14 +598,16 @@ a:link {
     z-index: 1020;
     padding-top: 28px;
     padding-bottom: 28px;
-    min-height: 92px;
     box-sizing: border-box;
 }
 .collection-section.bg-dark .collection-section-title {
     background-color: #343a40;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 .collection-section.bg-secondary .collection-section-title {
     background-color: #222222;
+    padding-bottom: 16px;
 }
 .collection-list {
     display: flex;
