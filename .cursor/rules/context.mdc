@@ -16,3 +16,5 @@ It describes the game I am making, Prismatics, which is a roguelike deckbuilder 
 We use query-string cache-busting on custom CSS (`style.css?v=N`, `responsive.css?v=N`). The /ship workflow automatically increments these version params so browsers don’t serve stale cached styles.
 
 **Workflow:** You always keep all changes — no need to ask. When you have made changes, run the ship workflow (stage, commit, push to main) without waiting for approval; you need to check how it looks on main.
+
+**Collection refresh:** When running `scripts/refresh_collection.py`, always use the project venv (e.g. `.venv/bin/python`). The script adds emblem outlines to upgrade images only when Pillow is available; running without the venv overwrites those images and drops the outlines.

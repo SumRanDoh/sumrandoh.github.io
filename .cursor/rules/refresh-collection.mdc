@@ -7,13 +7,16 @@ alwaysApply: false
 
 When the user asks to **refresh my collection** (or similar: "refresh collection", "sync collection", "update collection from game"):
 
-1. **Run the refresh script**
+1. **Run the refresh script with the project venv**
+   - Always use the project’s venv so Pillow is available. The script adds emblem outlines to component and worker upgrade images only when PIL is present; without it, copied images overwrite the existing ones and outlines are lost.
    ```bash
-   python3 scripts/refresh_collection.py
+   .venv/bin/python scripts/refresh_collection.py
    ```
+   (If the venv lives elsewhere, use that interpreter.)
 
 2. **What it does**
    - Copies game piece images from `/Users/caleb/Prismatics/prismatics/assets/images/` to `assets/images/collection/`
+   - Adds outlines to upgrade images (emblem outline in dominant color) when Pillow is available
    - Extracts titles and rules from game class files
    - Updates `assets/data/collection.json`
    - Replaces the collection sections in `index.html` between `<!-- COLLECTION_SECTIONS_START -->` and `<!-- COLLECTION_SECTIONS_END -->`
