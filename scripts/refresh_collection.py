@@ -513,7 +513,7 @@ def generate_collection_html(data: dict) -> str:
         for piece in data[key]:
             img = piece.get("image", "")
             title_text = html_escape(piece.get("title", ""))
-            rules = html_escape(piece.get("rules", ""))
+            rules = html_escape(piece.get("rules", "")).replace("\u26a1", '<span class="power-icon" aria-hidden="true"></span>')
             item_class = "collection-item collection-item-worker" if is_worker else "collection-item"
             if is_upgrade:
                 img_html = f'<div class="collection-piece-img-upgrade"><img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy"></div>'

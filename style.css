@@ -678,6 +678,14 @@ a:link {
     font-size: 18px;
     line-height: 1.3;
 }
+.power-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    background: url("assets/images/power.png") no-repeat center;
+    background-size: contain;
+}
 
 /*::::::::::::::::::::::::::::::::::::
    Blog Area 
