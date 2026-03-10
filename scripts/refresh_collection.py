@@ -178,8 +178,13 @@ def polish_rules_for_website(rules: str, variant: str, category: str) -> str:
         "SafetySupervisor": "The worker directly below this one gets +1 and +1",
         "MechatronicsTechnician": "Whenever a number's movement direction changes, conveyors get +1 until the end of the month",
     }
+    WORKER_UPGRADE_FALLBACKS = {
+        "FreshInstall": "This worker gets +3. Upgrade discarded after 3 months",
+    }
     if not rules or not rules.strip():
-        return WORKER_FALLBACKS.get(variant, "")
+        return WORKER_FALLBACKS.get(variant, "") if category == "Worker" else (WORKER_UPGRADE_FALLBACKS.get(variant, "") if category == "WorkerUpgrade" else "")
+    if category == "WorkerUpgrade" and variant in WORKER_UPGRADE_FALLBACKS and rules.strip() == "This worker gets +3":
+        return WORKER_UPGRADE_FALLBACKS[variant]
     # Fix common bad patterns from placeholder substitution
     rules = re.sub(r"(\d) time1$", r"\1 time", rules)
     rules = re.sub(r"(\d) time1\.0", r"\1 time", rules)

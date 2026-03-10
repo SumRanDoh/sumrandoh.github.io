@@ -602,7 +602,7 @@
     },
     {
       "title": "Fresh Install",
-      "rules": "This worker gets +3",
+      "rules": "This worker gets +3. Upgrade discarded after 3 months",
       "image": "assets/images/collection/worker_upgrades/fresh_install_tl.png"
     },
     {
