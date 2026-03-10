@@ -344,11 +344,14 @@ button:focus {
     position: relative;
 }
 .prismatics-dropdown > .nav-link::after {
-    content: '\25BC';
-    font-size: 0.5em;
-    margin-left: 4px;
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
     vertical-align: middle;
-    opacity: 0.8;
+    background: url("assets/images/dropdown_arrow.png") no-repeat center;
+    background-size: contain;
 }
 .prismatics-dropdown-menu {
     display: none;
@@ -403,11 +406,14 @@ button:focus {
     background-color: transparent;
 }
 .blog-dropdown > .nav-link::after {
-    content: '\25BC';
-    font-size: 0.5em;
-    margin-left: 4px;
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
     vertical-align: middle;
-    opacity: 0.8;
+    background: url("assets/images/dropdown_arrow.png") no-repeat center;
+    background-size: contain;
 }
 .blog-dropdown-menu {
     display: none;
