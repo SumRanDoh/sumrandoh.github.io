@@ -344,7 +344,7 @@ button:focus {
 ::::::::::::::::::::::::::::::::::::*/
 
 #about {
-    padding: 60px 50px 25px 50px;
+    padding: 35px 50px 25px 50px;
 }
 
 .about-row {
@@ -412,11 +412,11 @@ button:focus {
 }
 
 .prismatics-block:last-child {
-    margin-bottom: -0.5rem;
+    margin-bottom: -2rem;
 }
 
 .prismatics-block:last-child .prismatics-screenshot {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .prismatics-block-title {
