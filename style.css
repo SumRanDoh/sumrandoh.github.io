@@ -394,6 +394,14 @@ button:focus {
 .blog-dropdown {
     position: relative;
 }
+.blog-dropdown > .nav-link {
+    background-color: transparent;
+}
+.blog-dropdown > .nav-link:hover,
+.blog-dropdown > .nav-link:focus,
+.blog-dropdown > .nav-link:active {
+    background-color: transparent;
+}
 .blog-dropdown > .nav-link::after {
     content: '\25BC';
     font-size: 0.5em;
@@ -432,12 +440,15 @@ button:focus {
     font-size: 24px;
     white-space: nowrap;
 }
-.blog-dropdown-item.blog-dropdown-green { color: #25BF17; }
-.blog-dropdown-item.blog-dropdown-green:hover { background-color: #444; color: #25BF17; }
-.blog-dropdown-item.blog-dropdown-red { color: #F73131; }
-.blog-dropdown-item.blog-dropdown-red:hover { background-color: #444; color: #F73131; }
-.blog-dropdown-item.blog-dropdown-blue { color: #3B8DE8; }
-.blog-dropdown-item.blog-dropdown-blue:hover { background-color: #444; color: #3B8DE8; }
+.blog-dropdown-item.blog-dropdown-green { color: #25BF17; background-color: transparent; }
+.blog-dropdown-item.blog-dropdown-green:hover,
+.blog-dropdown-item.blog-dropdown-green:focus { background-color: #444; color: #25BF17; }
+.blog-dropdown-item.blog-dropdown-red { color: #F73131; background-color: transparent; }
+.blog-dropdown-item.blog-dropdown-red:hover,
+.blog-dropdown-item.blog-dropdown-red:focus { background-color: #444; color: #F73131; }
+.blog-dropdown-item.blog-dropdown-blue { color: #3B8DE8; background-color: transparent; }
+.blog-dropdown-item.blog-dropdown-blue:hover,
+.blog-dropdown-item.blog-dropdown-blue:focus { background-color: #444; color: #3B8DE8; }
 .blog-post-mobile {
     display: none;
 }
@@ -581,6 +592,17 @@ a:link {
     font-size: 36px;
     text-align: center;
     margin-bottom: 2rem;
+    position: sticky;
+    top: 56px;
+    z-index: 1020;
+    padding: 14px 0;
+    margin-top: 0;
+}
+.collection-section.bg-dark .collection-section-title {
+    background-color: #343a40;
+}
+.collection-section.bg-secondary .collection-section-title {
+    background-color: #222222;
 }
 .collection-list {
     display: flex;
