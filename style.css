@@ -484,9 +484,9 @@ a:link {
 }
 
 /* Prismatics palette: green (oldest), blue, red (newest) */
-.blog-title-green h6 { color: #25BF17; }
-.blog-title-blue h6 { color: #3B8DE8; }
-.blog-title-red h6 { color: #F73131; }
+.blog-title-green h6 { color: #25BF17 !important; }
+.blog-title-blue h6 { color: #3B8DE8 !important; }
+.blog-title-red h6 { color: #F73131 !important; }
 
 .blog-title {
     margin-bottom: 10px;
