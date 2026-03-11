@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="assets/css/lightbox.min.css" />
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css" />
     <link rel="stylesheet" href="assets/css/animate.css" />
-    <link rel="stylesheet" href="style.css?v=53" />
-    <link rel="stylesheet" href="assets/css/responsive.css?v=53" />
+    <link rel="stylesheet" href="style.css?v=54" />
+    <link rel="stylesheet" href="assets/css/responsive.css?v=54" />
   </head>
 
   <body data-spy="scroll" data-target=".navbar-nav">
@@ -199,9 +199,10 @@
     <!-- ====== // Prismatics ====== -->
 
     <!-- COLLECTION_SECTIONS_START -->
-    <section id="collection-components" class="collection-section top-part-padding bg-dark">
+    <section id="collection-components" class="collection-section top-part-padding bg-dark" data-collection-section>
         <div class="container">
-            <h2 class="collection-section-title">Components</h2>
+            <h2 class="collection-section-title collection-section-toggle" id="collection-components-title" data-section-id="collection-components" tabindex="0" role="button" aria-expanded="false" aria-controls="collection-components-body">Components</h2>
+            <div class="collection-section-body" id="collection-components-body">
             <div class="collection-list">
             <div class="collection-item">
               <img src="assets/images/collection/components/conveyor_red_normal.png" alt="Red Conveyor" class="collection-piece-img" loading="lazy">
@@ -372,12 +373,14 @@
               </div>
             </div>
             </div>
+            </div>
         </div>
     </section>
 
-    <section id="collection-component-upgrades" class="collection-section top-part-padding bg-secondary">
+    <section id="collection-component-upgrades" class="collection-section top-part-padding bg-secondary" data-collection-section>
         <div class="container">
-            <h2 class="collection-section-title">Component Upgrades</h2>
+            <h2 class="collection-section-title collection-section-toggle" id="collection-component-upgrades-title" data-section-id="collection-component-upgrades" tabindex="0" role="button" aria-expanded="false" aria-controls="collection-component-upgrades-body">Component Upgrades</h2>
+            <div class="collection-section-body" id="collection-component-upgrades-body">
             <div class="collection-list">
             <div class="collection-item">
               <div class="collection-piece-img-upgrade"><img src="assets/images/collection/component_upgrades/comp_upgrade_boost_common.png" alt="Common Self Buff" class="collection-piece-img" loading="lazy"></div>
@@ -492,19 +495,20 @@
               </div>
             </div>
             </div>
+            </div>
         </div>
     </section>
 
-    <section id="collection-workers" class="collection-section top-part-padding bg-dark">
+    <section id="collection-workers" class="collection-section top-part-padding bg-dark" data-collection-section>
         <div class="container">
-            <h2 class="collection-section-title">Workers</h2>
+            <h2 class="collection-section-title collection-section-toggle" id="collection-workers-title" data-section-id="collection-workers" tabindex="0" role="button" aria-expanded="false" aria-controls="collection-workers-body">Workers</h2>
+            <div class="collection-section-body" id="collection-workers-body">
             <div class="collection-list">
             <div class="collection-item collection-item-worker">
               <img src="assets/images/collection/workers/accountant.png" alt="Accountant 1.0" class="collection-piece-img" loading="lazy">
               <div class="collection-piece-text">
                 <div class="collection-piece-title"><span style="color:#ffa500">Accountant</span> <span style="color:#25bf17">1.0</span></div>
-                <div class="collection-piece-rules">Upon entering the store, gain 10% interest on held money
-+10% for every <span style="color:#25bf17">version</span> beyond 1.0</div>
+                <div class="collection-piece-rules">Upon entering the store, gain 10% interest on held money<br>+10% for every <span style="color:#25bf17">version</span> beyond 1.0</div>
               </div>
             </div>
             <div class="collection-item collection-item-worker">
@@ -658,18 +662,14 @@
               <img src="assets/images/collection/workers/component_developer.png" alt="Component Developer 1.0" class="collection-piece-img" loading="lazy">
               <div class="collection-piece-text">
                 <div class="collection-piece-title"><span style="color:#b353fc">Component Developer</span> <span style="color:#25bf17">1.0</span></div>
-                <div class="collection-piece-rules">Can embed a component from your hand
-
-Components cost <span style="color:#ffd147"><span class="power-icon" aria-hidden="true"></span></span><span style="color:#25bf17">1</span> less</div>
+                <div class="collection-piece-rules">Can embed a component from your hand<br><br>Components cost <span style="color:#ffd147"><span class="power-icon" aria-hidden="true"></span></span><span style="color:#25bf17">1</span> less</div>
               </div>
             </div>
             <div class="collection-item collection-item-worker">
               <img src="assets/images/collection/workers/operation_developer.png" alt="Operation Developer 1.0" class="collection-piece-img" loading="lazy">
               <div class="collection-piece-text">
                 <div class="collection-piece-title"><span style="color:#b353fc">Operation Developer</span> <span style="color:#25bf17">1.0</span></div>
-                <div class="collection-piece-rules">Can embed an operation from the store
-
-Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden="true"></span></span><span style="color:#25bf17">1</span> less</div>
+                <div class="collection-piece-rules">Can embed an operation from the store<br><br>Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden="true"></span></span><span style="color:#25bf17">1</span> less</div>
               </div>
             </div>
             <div class="collection-item collection-item-worker">
@@ -746,8 +746,7 @@ Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden
               <img src="assets/images/collection/workers/assembler.png" alt="Assembler 1.0" class="collection-piece-img" loading="lazy">
               <div class="collection-piece-text">
                 <div class="collection-piece-title"><span style="color:#00f0f0">Assembler</span> <span style="color:#25bf17">1.0</span></div>
-                <div class="collection-piece-rules">Your max hand size gets +1
-+1 for every three <span style="color:#25bf17">versions</span> beyond 1.0</div>
+                <div class="collection-piece-rules">Your max hand size gets +1<br>+1 for every three <span style="color:#25bf17">versions</span> beyond 1.0</div>
               </div>
             </div>
             <div class="collection-item collection-item-worker">
@@ -782,7 +781,7 @@ Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden
               <img src="assets/images/collection/workers/liquidation_developer.png" alt="Liquidation Developer 1.0" class="collection-piece-img" loading="lazy">
               <div class="collection-piece-text">
                 <div class="collection-piece-title"><span style="color:#00f0f0">Liquidation Developer</span> <span style="color:#25bf17">1.0</span></div>
-                <div class="collection-piece-rules"><span style="color:#ffd147"><span class="power-icon" aria-hidden="true"></span></span><span style="color:#25bf17">1</span></div>
+                <div class="collection-piece-rules">Can embed a component from your hand<br><br>Upon entering the store, sell the embedded component for <span style="color:#ffd147"><span class="power-icon" aria-hidden="true"></span></span><span style="color:#25bf17">1</span></div>
               </div>
             </div>
             <div class="collection-item collection-item-worker">
@@ -866,7 +865,7 @@ Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden
               <img src="assets/images/collection/workers/replication_developer.png" alt="Replication Developer 1.0" class="collection-piece-img" loading="lazy">
               <div class="collection-piece-text">
                 <div class="collection-piece-title"><span style="color:#f03cf0">Replication Developer</span> <span style="color:#25bf17">1.0</span></div>
-                <div class="collection-piece-rules">Can embed a component from your hand. Upon entering the store, add 1 copy of the embedded component to your deck</div>
+                <div class="collection-piece-rules">Can embed a component from your hand<br><br>Upon entering the store, add <span style="color:#25bf17">1</span> 1 of the embedded component to your deck</div>
               </div>
             </div>
             <div class="collection-item collection-item-worker">
@@ -877,12 +876,14 @@ Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden
               </div>
             </div>
             </div>
+            </div>
         </div>
     </section>
 
-    <section id="collection-worker-upgrades" class="collection-section top-part-padding bg-secondary">
+    <section id="collection-worker-upgrades" class="collection-section top-part-padding bg-secondary" data-collection-section>
         <div class="container">
-            <h2 class="collection-section-title">Worker Upgrades</h2>
+            <h2 class="collection-section-title collection-section-toggle" id="collection-worker-upgrades-title" data-section-id="collection-worker-upgrades" tabindex="0" role="button" aria-expanded="false" aria-controls="collection-worker-upgrades-body">Worker Upgrades</h2>
+            <div class="collection-section-body" id="collection-worker-upgrades-body">
             <div class="collection-list">
             <div class="collection-item">
               <div class="collection-piece-img-upgrade"><img src="assets/images/collection/worker_upgrades/commendation_tl.png" alt="Commendation" class="collection-piece-img" loading="lazy"></div>
@@ -962,12 +963,14 @@ Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden
               </div>
             </div>
             </div>
+            </div>
         </div>
     </section>
 
-    <section id="collection-operations" class="collection-section top-part-padding bg-dark">
+    <section id="collection-operations" class="collection-section top-part-padding bg-dark" data-collection-section>
         <div class="container">
-            <h2 class="collection-section-title">Operations</h2>
+            <h2 class="collection-section-title collection-section-toggle" id="collection-operations-title" data-section-id="collection-operations" tabindex="0" role="button" aria-expanded="false" aria-controls="collection-operations-body">Operations</h2>
+            <div class="collection-section-body" id="collection-operations-body">
             <div class="collection-list">
             <div class="collection-item">
               <img src="assets/images/collection/operations/redshift.png" alt="Redshift" class="collection-piece-img" loading="lazy">
@@ -1054,12 +1057,14 @@ Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden
               </div>
             </div>
             </div>
+            </div>
         </div>
     </section>
 
-    <section id="collection-challenges" class="collection-section top-part-padding bg-secondary">
+    <section id="collection-challenges" class="collection-section top-part-padding bg-secondary" data-collection-section>
         <div class="container">
-            <h2 class="collection-section-title">Challenges</h2>
+            <h2 class="collection-section-title collection-section-toggle" id="collection-challenges-title" data-section-id="collection-challenges" tabindex="0" role="button" aria-expanded="false" aria-controls="collection-challenges-body">Challenges</h2>
+            <div class="collection-section-body" id="collection-challenges-body">
             <div class="collection-list">
             <div class="collection-item">
               <img src="assets/images/collection/challenges/backorder.png" alt="Backorder" class="collection-piece-img" loading="lazy">
@@ -1109,6 +1114,7 @@ Operations cost <span style="color:#ffd147"><span class="power-icon" aria-hidden
                 <div class="collection-piece-title">Strange Stench</div>
                 <div class="collection-piece-rules">A random office is disabled this month</div>
               </div>
+            </div>
             </div>
             </div>
         </div>

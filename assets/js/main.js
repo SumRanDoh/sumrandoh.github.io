@@ -33,6 +33,44 @@
         });
     });
 
+    /*:::::::::::::::::::::::::::::::::::
+       Collection sections: collapsed by default, click title to expand
+       Expand one section, collapse others, scroll to section, stick next title to bottom
+    ::::::::::::::::::::::::::::::::::::*/
+    $(function () {
+        var $sections = $('[data-collection-section]');
+        var $toggles = $('.collection-section-toggle');
+
+        function expandSection(sectionId) {
+            $sections.removeClass('expanded');
+            $toggles.attr('aria-expanded', 'false');
+            $('.collection-section-title-next').removeClass('collection-section-title-next');
+            var $section = $('#' + sectionId);
+            if ($section.length) {
+                $section.addClass('expanded');
+                $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
+                var $next = $section.next('[data-collection-section]');
+                if ($next.length) {
+                    $next.find('.collection-section-title').addClass('collection-section-title-next');
+                }
+                var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
+                $('html, body').scrollTop(Math.max(0, $section.offset().top - offset));
+            }
+        }
+
+        $toggles.on('click', function () {
+            var sectionId = $(this).data('section-id');
+            if (sectionId) expandSection(sectionId);
+        });
+        $toggles.on('keydown', function (e) {
+            if (e.which === 13 || e.which === 32) {
+                e.preventDefault();
+                var sectionId = $(this).data('section-id');
+                if (sectionId) expandSection(sectionId);
+            }
+        });
+    });
+
 
     /*::::::::::::::::::::::::::::::::::::
        Contact Area 

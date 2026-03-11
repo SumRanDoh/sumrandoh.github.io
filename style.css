@@ -609,11 +609,18 @@ a:link {
     padding-top: 50px;
     padding-bottom: 50px;
 }
+/* Collapsed by default; only titles visible */
+.collection-section-body {
+    display: none;
+}
+.collection-section.expanded .collection-section-body {
+    display: block;
+}
 .collection-section-title {
     color: #FFA500;
     font-size: 36px;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     margin-top: 0;
     position: sticky;
     top: 56px;
@@ -624,6 +631,17 @@ a:link {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    user-select: none;
+}
+.collection-section.expanded .collection-section-title {
+    margin-bottom: 2rem;
+}
+.collection-section-title.collection-section-title-next {
+    position: sticky;
+    bottom: 0;
+    top: auto;
+    z-index: 1019;
 }
 .collection-section.bg-dark .collection-section-title {
     background-color: #343a40;

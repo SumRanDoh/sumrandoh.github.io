@@ -143,6 +143,8 @@ def _parse_gd_format_args(array_str: str) -> list:
             values.append(PALETTE_HEX["legendary"])
         elif "copied.variant" in p or "set_rules" in p:
             values.append("—")  # placeholder for copy workers; use fallback
+        elif "copy" in p and "copies" in p:
+            values.append("copy")  # ('copy' if actual.n == 1 else 'copies') for n=1
         else:
             values.append(1)  # default for %d / %0.0f
     return values
@@ -207,6 +209,36 @@ def build_worker_rules_and_reminders(cls_path: Path, variant: str) -> str:
         reminder_parts = [bbcode_color_to_html(r) if "[color=#" in r else html_escape(r) for r in reminders]
         full = rules_text + ("\n" + "\n".join(reminder_parts) if reminder_parts else "")
         return full
+
+    # Three-part: var ret = '...' then ret += '...' (no format) then ret += '...' % [...] (LiquidationDeveloper, ReplicationDeveloper)
+    three_part = re.search(
+        r"(?:var ret = '([^']*)'|var ret = \"([^\"]*)\")\s+"
+        r"ret \+= '([^']*(?:\\.[^']*)*)'\s+"
+        r"ret \+= '([^']*(?:\\.[^']*)*)'\s*\\?\s*%\s*\[(.*?)\]\s*(?=\)|\n)",
+        content,
+        re.DOTALL,
+    )
+    if three_part:
+        part1 = (three_part.group(1) or three_part.group(2) or "").replace("\\n", "\n")
+        part2 = three_part.group(3).replace("\\n", "\n")
+        part3_template = three_part.group(4).replace("\\n", "\n")
+        format_args_str = three_part.group(5).strip().replace("\n", " ")
+        if "set_rules" not in format_args_str and "copied.variant" not in format_args_str:
+            try:
+                values = _parse_gd_format_args(format_args_str)
+                part3_template_safe = part3_template.replace("%%", "\x00")
+                part3 = part3_template_safe % tuple(values)
+                part3 = part3.replace("\x00", "%")
+                rules_text = part1 + part2 + part3
+                rules_text = polish_rules_for_website(rules_text, variant, "Worker")
+                if "[color=#" in rules_text:
+                    rules_text = bbcode_color_to_html(rules_text)
+                reminders = extract_reminders_from_worker_class(cls_path)
+                reminder_parts = [bbcode_color_to_html(r) if "[color=#" in r else html_escape(r) for r in reminders]
+                full = rules_text + ("\n" + "\n".join(reminder_parts) if reminder_parts else "")
+                return full
+            except (TypeError, ValueError):
+                pass
 
     # Two-part: var ret = '...' or "..." then ret += '...' % [...] (Horizontal Director, MechatronicsTechnician, Maintenance, etc.)
     two_part = re.search(
@@ -751,6 +783,7 @@ def generate_collection_html(data: dict) -> str:
             rules = piece.get("rules", "")
             if "<span" not in rules:
                 rules = html_escape(rules)
+            rules = rules.replace("\n", "<br>")
             rules = rules.replace("\u26a1", '<span class="power-icon" aria-hidden="true"></span>')
             item_class = "collection-item collection-item-worker" if is_worker else "collection-item"
             if is_upgrade:
@@ -764,11 +797,13 @@ def generate_collection_html(data: dict) -> str:
                 <div class="collection-piece-rules">{rules}</div>
               </div>
             </div>''')
-        sections.append(f'''    <section id="collection-{section_id}" class="collection-section top-part-padding {bg}">
+        sections.append(f'''    <section id="collection-{section_id}" class="collection-section top-part-padding {bg}" data-collection-section>
         <div class="container">
-            <h2 class="collection-section-title">{title}</h2>
+            <h2 class="collection-section-title collection-section-toggle" id="collection-{section_id}-title" data-section-id="collection-{section_id}" tabindex="0" role="button" aria-expanded="false" aria-controls="collection-{section_id}-body">{title}</h2>
+            <div class="collection-section-body" id="collection-{section_id}-body">
             <div class="collection-list">
 {chr(10).join(items)}
+            </div>
             </div>
         </div>
     </section>''')
