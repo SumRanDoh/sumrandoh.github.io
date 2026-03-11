@@ -305,266 +305,319 @@
   "workers": [
     {
       "title": "Accountant",
-      "rules": "Upon entering the store, gain 10% interest on held money",
+      "rarity": "common",
+      "rules": "Upon entering the store, gain 10% interest on held money\n+10% for every <span style=\"color:#25bf17\">version</span> beyond 1.0",
       "image": "assets/images/collection/workers/accountant.png"
     },
     {
       "title": "Janitor",
+      "rarity": "common",
       "rules": "\u26a11 for each number left unpacked on the factory floor",
       "image": "assets/images/collection/workers/janitor.png"
     },
     {
       "title": "Maintenance",
+      "rarity": "common",
       "rules": "The first component you discard each hand pays an additional \u26a11",
       "image": "assets/images/collection/workers/maintenance.png"
     },
     {
       "title": "Marketer",
-      "rules": "Workers sell for \u26a11 more",
+      "rarity": "common",
+      "rules": "Workers sell for <span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span> more",
       "image": "assets/images/collection/workers/marketer.png"
     },
     {
       "title": "Red Mechanic",
-      "rules": "Red components get +1",
+      "rarity": "common",
+      "rules": "Red components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/red_mechanic.png"
     },
     {
       "title": "Blue Mechanic",
-      "rules": "Blue components get +1",
+      "rarity": "common",
+      "rules": "Blue components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/blue_mechanic.png"
     },
     {
       "title": "Green Mechanic",
-      "rules": "Green components get +1",
+      "rarity": "common",
+      "rules": "Green components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/green_mechanic.png"
     },
     {
       "title": "Yellow Mechanic",
-      "rules": "Yellow components get +1",
+      "rarity": "common",
+      "rules": "Yellow components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/yellow_mechanic.png"
     },
     {
       "title": "Up Lineworker",
-      "rules": "Up-facing components get +1",
+      "rarity": "common",
+      "rules": "Up-facing components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/up_lineworker.png"
     },
     {
       "title": "Down Lineworker",
-      "rules": "Down-facing components get +1",
+      "rarity": "common",
+      "rules": "Down-facing components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/down_lineworker.png"
     },
     {
       "title": "Left Lineworker",
-      "rules": "Left-facing components get +1",
+      "rarity": "common",
+      "rules": "Left-facing components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/left_lineworker.png"
     },
     {
       "title": "Right Lineworker",
-      "rules": "Right-facing components get +1",
+      "rarity": "common",
+      "rules": "Right-facing components get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/right_lineworker.png"
     },
     {
       "title": "Capacity Manager",
-      "rules": "Components on the highlighted factory tiles increment an additional 1 time",
+      "rarity": "common",
+      "rules": "Components on the highlighted factory tiles increment an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/capacity_manager.png"
     },
     {
       "title": "Distribution Manager",
-      "rules": "Components on the highlighted factory tiles increment an additional 1 time",
+      "rarity": "common",
+      "rules": "Components on the highlighted factory tiles increment an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/distribution_manager.png"
     },
     {
       "title": "Logistics Manager",
-      "rules": "Components on the highlighted factory tiles increment an additional 1 time",
+      "rarity": "common",
+      "rules": "Components on the highlighted factory tiles increment an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/logistics_manager.png"
     },
     {
       "title": "Upper Level Manager",
-      "rules": "Components on the highlighted factory tiles increment an additional 1 time",
+      "rarity": "common",
+      "rules": "Components on the highlighted factory tiles increment an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/upper_level_manager.png"
     },
     {
       "title": "Lower Level Manager",
-      "rules": "Components on the highlighted factory tiles increment an additional 1 time",
+      "rarity": "common",
+      "rules": "Components on the highlighted factory tiles increment an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/lower_level_manager.png"
     },
     {
       "title": "Welding Manager",
-      "rules": "Components on the highlighted factory tiles increment an additional 1 time",
+      "rarity": "common",
+      "rules": "Components on the highlighted factory tiles increment an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/welding_manager.png"
     },
     {
       "title": "Transport Manager",
-      "rules": "Components on the highlighted factory tiles increment an additional 1 time",
+      "rarity": "common",
+      "rules": "Components on the highlighted factory tiles increment an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/transport_manager.png"
     },
     {
       "title": "Headhunter",
-      "rules": "Add 3 rare pips to each pack distribution",
+      "rarity": "uncommon",
+      "rules": "Add 3+<span style=\"color:#25bf17\">1</span> <span style=\"color:#00f0f0\">rare</span> pips to each pack distribution",
       "image": "assets/images/collection/workers/headhunter.png"
     },
     {
       "title": "Receptionist",
-      "rules": "Packs cost \u26a11 less",
+      "rarity": "uncommon",
+      "rules": "Packs cost <span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span> less",
       "image": "assets/images/collection/workers/receptionist.png"
     },
     {
       "title": "Recruiter",
+      "rarity": "uncommon",
       "rules": "Add 1 uncommon, 1 rare, & 1 legendary pip to each pack distribution",
       "image": "assets/images/collection/workers/recruiter.png"
     },
     {
       "title": "Component Developer",
+      "rarity": "uncommon",
       "rules": "Can embed a component from your hand. Components cost \u26a11 less",
       "image": "assets/images/collection/workers/component_developer.png"
     },
     {
       "title": "Operation Developer",
+      "rarity": "uncommon",
       "rules": "Can embed an operation from the store. Operations cost \u26a11 less",
       "image": "assets/images/collection/workers/operation_developer.png"
     },
     {
       "title": "Vertical Director",
-      "rules": "Workers below this one get +1",
+      "rarity": "uncommon",
+      "rules": "Workers below this one get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/vertical_director.png"
     },
     {
       "title": "Horizontal Director",
-      "rules": "Workers to the right of this one get +1",
+      "rarity": "uncommon",
+      "rules": "<span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/horizontal_director.png"
     },
     {
       "title": "Division Overseer",
+      "rarity": "uncommon",
       "rules": "Non-upgraded corners of the Worker to the left of this one act upgraded, giving +1",
       "image": "assets/images/collection/workers/division_overseer.png"
     },
     {
       "title": "Section Overseer",
+      "rarity": "uncommon",
       "rules": "Non-upgraded corners of the Worker above this one act upgraded, giving +1",
       "image": "assets/images/collection/workers/section_overseer.png"
     },
     {
       "title": "Receiving Supervisor",
-      "rules": "The worker directly to the right of this one gets +1 and +1",
+      "rarity": "uncommon",
+      "rules": "The worker directly to the right of this one gets +1 and <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/receiving_supervisor.png"
     },
     {
       "title": "Safety Supervisor",
-      "rules": "The worker directly below this one gets +1 and +1",
+      "rarity": "uncommon",
+      "rules": "The worker directly below this one gets +1 and <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/safety_supervisor.png"
     },
     {
       "title": "Red Researcher",
-      "rules": "Get \u26a11 per red number packaged",
+      "rarity": "rare",
+      "rules": "Get <span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span> per red number packaged",
       "image": "assets/images/collection/workers/red_researcher.png"
     },
     {
       "title": "Green Researcher",
-      "rules": "Green conveyor activations score +1 green score multiplier",
+      "rarity": "rare",
+      "rules": "Green conveyor activations score <span style=\"color:#25bf17\">+1</span> green score multiplier",
       "image": "assets/images/collection/workers/green_researcher.png"
     },
     {
       "title": "Blue Researcher",
-      "rules": "Blue conveyors increment blue numbers an additional 1 time",
+      "rarity": "rare",
+      "rules": "Blue conveyors increment blue numbers an additional <span style=\"color:#25bf17\">1</span> time",
       "image": "assets/images/collection/workers/blue_researcher.png"
     },
     {
       "title": "Yellow Researcher",
-      "rules": "Numbers that absorb others on a yellow tile are multiplied by 1",
+      "rarity": "rare",
+      "rules": "Numbers that absorb others on a yellow tile are multiplied by <span style=\"color:#25bf17\">1</span>",
       "image": "assets/images/collection/workers/yellow_researcher.png"
     },
     {
       "title": "Assembler",
-      "rules": "Your max hand size gets +1",
+      "rarity": "rare",
+      "rules": "Your max hand size gets +1\n+1 for every three <span style=\"color:#25bf17\">versions</span> beyond 1.0",
       "image": "assets/images/collection/workers/assembler.png"
     },
     {
       "title": "Graphic Designer",
+      "rarity": "rare",
       "rules": "You cannot draw one color of components",
       "image": "assets/images/collection/workers/graphic_designer.png"
     },
     {
       "title": "Inventory Clerk",
+      "rarity": "rare",
       "rules": "Stationary numbers get packaged by the first Packager in the same row or column as them",
       "image": "assets/images/collection/workers/inventory_clerk.png"
     },
     {
       "title": "Load Planner",
+      "rarity": "rare",
       "rules": "Packagers can accept numbers from any direction",
       "image": "assets/images/collection/workers/load_planner.png"
     },
     {
       "title": "Packaging Specialist",
-      "rules": "Fabricators get +1 for every Packager on the factory floor",
+      "rarity": "rare",
+      "rules": "Fabricators get <span style=\"color:#25bf17\">+1</span> for every Packager on the factory floor",
       "image": "assets/images/collection/workers/packaging_specialist.png"
     },
     {
       "title": "Liquidation Developer",
+      "rarity": "rare",
       "rules": "Can embed a component from your hand. Upon entering the store, sell it for \u26a11",
       "image": "assets/images/collection/workers/liquidation_developer.png"
     },
     {
       "title": "Industrial Engineer",
+      "rarity": "rare",
       "rules": "Copy the worker directly above this one",
       "image": "assets/images/collection/workers/industrial_engineer.png"
     },
     {
       "title": "Mechanical Engineer",
+      "rarity": "rare",
       "rules": "Copy the worker directly to the left of this one",
       "image": "assets/images/collection/workers/mechanical_engineer.png"
     },
     {
       "title": "Chemical Engineer",
+      "rarity": "rare",
       "rules": "Copy the worker diagonally to the top left of this one",
       "image": "assets/images/collection/workers/chemical_engineer.png"
     },
     {
       "title": "Automation Technician",
-      "rules": "Whenever numbers combine, conveyors get +1 until the end of the month",
+      "rarity": "rare",
+      "rules": "Whenever numbers combine, conveyors get <span style=\"color:#25bf17\">+1</span> until the end of the month",
       "image": "assets/images/collection/workers/automation_technician.png"
     },
     {
       "title": "Instrumentation Technician",
-      "rules": "Whenever a number changes color, conveyors get +1 until the end of the month",
+      "rarity": "rare",
+      "rules": "Whenever a number changes color, conveyors get <span style=\"color:#25bf17\">+1</span> until the end of the month",
       "image": "assets/images/collection/workers/instrumentation_technician.png"
     },
     {
       "title": "Mechatronics Technician",
+      "rarity": "rare",
       "rules": "Whenever a number's movement direction changes, conveyors get +1 until the end of the month",
       "image": "assets/images/collection/workers/mechatronics_technician.png"
     },
     {
       "title": "Chef",
+      "rarity": "legendary",
       "rules": "Non-upgraded corners of Workers in the top row act upgraded, giving +1",
       "image": "assets/images/collection/workers/chef.png"
     },
     {
       "title": "Chief Executive Officer",
-      "rules": "Workers in the row below this one get +1",
+      "rarity": "legendary",
+      "rules": "Workers in the row below this one get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/chief_executive_officer.png"
     },
     {
       "title": "Data Scientist",
+      "rarity": "legendary",
       "rules": "+1 max refill",
       "image": "assets/images/collection/workers/data_scientist.png"
     },
     {
       "title": "Fabrication Specialist",
-      "rules": "Fabricators produce 1 additional number",
+      "rarity": "legendary",
+      "rules": "Fabricators produce <span style=\"color:#25bf17\">1</span> additional numbers",
       "image": "assets/images/collection/workers/fabrication_specialist.png"
     },
     {
       "title": "Procurement Agent",
+      "rarity": "legendary",
       "rules": "Fabricators produce numbers out of all sides",
       "image": "assets/images/collection/workers/procurement_agent.png"
     },
     {
       "title": "Replication Developer",
+      "rarity": "legendary",
       "rules": "Can embed a component from your hand. Upon entering the store, add 1 copy of the embedded component to your deck",
       "image": "assets/images/collection/workers/replication_developer.png"
     },
     {
       "title": "Robotics Expert",
+      "rarity": "legendary",
       "rules": "Duplicate workers can appear in the store or in packs",
       "image": "assets/images/collection/workers/robotics_expert.png"
     }

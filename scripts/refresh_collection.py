@@ -47,6 +47,16 @@ COMP_UPGRADE_VARIANTS = [
     ("SelfBuff", "boost"), ("RowBuff", "horiz"), ("ColumnBuff", "vert"), ("AdjacentBuff", "adjacent"),
 ]
 RARITIES = ["common", "uncommon", "rare", "legendary"]
+
+# Game palette hex (parameters.gd): rarities + version 1.0 (green for website) and money
+PALETTE_HEX = {
+    "common": "ffa500",
+    "uncommon": "b353fc",
+    "rare": "00f0f0",
+    "legendary": "f03cf0",
+    "version_1_0": "25bf17",  # green for version numbers (game uses gray at 1.0; site uses green)
+    "money": "ffd147",
+}
 OPERATION_VARIANTS = [
     ("common", "Redshift", "Blueshift", "Greenshift", "Yellowshift", "Clockwise", "Blockwise"),
     ("uncommon", "Fabricatorize", "MeltDown"),
@@ -85,6 +95,164 @@ def strip_bbcode(text: str) -> str:
     text = re.sub(r"\[/font_size\]", "", text)
     text = re.sub(r"\[/font\]", "", text)
     return text.strip()
+
+
+def _parse_gd_format_args(array_str: str) -> list:
+    """Parse GDScript format array after ' % [' for 1.0 non-upgraded Worker. Returns list of values."""
+    # Split by comma, respecting nested brackets
+    parts = []
+    depth = 0
+    current = []
+    for c in array_str.strip():
+        if c in "([{":
+            depth += 1
+            current.append(c)
+        elif c in ")]}":
+            depth -= 1
+            current.append(c)
+        elif c == "," and depth == 0:
+            parts.append("".join(current).strip())
+            current = []
+        else:
+            current.append(c)
+    if current:
+        parts.append("".join(current).strip())
+
+    values = []
+    for p in parts:
+        p = p.strip()
+        if "version_color" in p:
+            values.append(PALETTE_HEX["version_1_0"])
+        elif "actual.n * 10" in p or "n * 10" in p:
+            values.append(10)
+        elif "n + 1" in p or "n+1" in p:
+            values.append(2)  # n+1 for n=1
+        elif "actual.n" in p or (re.match(r"^\s*n\s*[,\]\)]", p) or p.strip() == "n"):
+            values.append(1)
+        elif "adjusted" in p:
+            values.append(1)
+        elif "plrl" in p:
+            values.append("")  # n=1 -> no plural
+        elif "money" in p and "palette" in p:
+            values.append(PALETTE_HEX["money"])
+        elif "uncommon" in p and "palette" in p:
+            values.append(PALETTE_HEX["uncommon"])
+        elif "rare" in p and "palette" in p and "legendary" not in p:
+            values.append(PALETTE_HEX["rare"])
+        elif "legendary" in p and "palette" in p:
+            values.append(PALETTE_HEX["legendary"])
+        elif "copied.variant" in p or "set_rules" in p:
+            values.append("—")  # placeholder for copy workers; use fallback
+        else:
+            values.append(1)  # default for %d / %0.0f
+    return values
+
+
+def bbcode_color_to_html(text: str) -> str:
+    """Convert [color=#hex]...[/color] to <span style="color:#hex">...</span>; escape rest; strip other BBcode."""
+    text = re.sub(r"\[font_size=\d+\]", "", text)
+    text = re.sub(r"\[/font_size\]", "", text)
+    text = re.sub(r"\[/font\]", "", text)
+    text = re.sub(r"\[center\]", "", text)
+    text = re.sub(r"\[/center\]", "", text)
+    parts = re.split(r"(\[color=#([a-fA-F0-9]+)\](.*?)\[/color\])", text, flags=re.DOTALL)
+    result = []
+    for i in range(len(parts)):
+        if i % 4 == 0:
+            result.append(html_escape(parts[i]))
+        elif i % 4 == 2:
+            hex_val = parts[i]
+            inner = parts[i + 1]
+            result.append(f'<span style="color:#{hex_val}">{html_escape(inner)}</span>')
+    return "".join(result).strip()
+
+
+def extract_reminders_from_worker_class(class_path: Path) -> list:
+    """Extract reminders.push_back('...') templates; return list of strings with version_color substituted."""
+    if not class_path.exists():
+        return []
+    content = class_path.read_text()
+    reminders = []
+    # Group 1: string content (no double quotes in GDScript single-quoted string); group 2: optional % [...]
+    for m in re.finditer(
+        r"reminders\.push_back\s*\(\s*'((?:[^'\\]|\\.)*)'\s*(?:%\s*\[([^\]]+)\])?\s*\)", content
+    ):
+        template = m.group(1).replace("\\n", "\n").replace("%%", "%")
+        args_str = m.group(2) if m.lastindex >= 2 and m.group(2) else ""
+        if args_str and "version_color" in args_str:
+            template = template.replace("%s", PALETTE_HEX["version_1_0"], 1)
+        if "%d" in template and "hard_cap" in args_str:
+            template = re.sub(r"%d", "10", template)
+        if "%s" in template and "version_color" not in args_str:
+            template = template.replace("%s", PALETTE_HEX["version_1_0"])
+        reminders.append(template)
+    return reminders
+
+
+def build_worker_rules_and_reminders(cls_path: Path, variant: str) -> str:
+    """Build full_rules_text + '\\n' + full_reminders_text for 1.0 non-upgraded Worker, with version numbers in green (HTML)."""
+    content = cls_path.read_text() if cls_path.exists() else ""
+
+    # Get main rules string: var ret = '...' % [...] or ret += '...' % [...]
+    rules_template = None
+    format_args_str = None
+    # Allow optional backslash + newline (GDScript line continuation) between string and % [
+    # Args array may contain ] e.g. in palette['rare'].to_html(); capture until ] then ) or newline
+    for pattern in [
+        r"var ret = '([^']*(?:\\.[^']*)*)'\s*\\?\s*%\s*\[(.*?)\]\s*(?=\)|\n)",
+        r'var ret = "([^"]*(?:\\.[^"]*)*)"\s*\\?\s*%\s*\[(.*?)\]\s*(?=\)|\n)',
+    ]:
+        m = re.search(pattern, content)
+        if m:
+            rules_template = m.group(1).replace("\\n", "\n")
+            format_args_str = m.group(2)
+            break
+    if not rules_template:
+        m = re.search(r"(?:var )?ret \+= '([^']*(?:\\.[^']*)*)'\s*%\s*\[([^\]]+)\]", content)
+        if m:
+            rules_template = m.group(1).replace("\\n", "\n")
+            format_args_str = m.group(2)
+    if not rules_template:
+        for m in re.finditer(r"(?:var )?ret = '([^']*(?:\\.[^']*)*)'", content):
+            if len(m.group(1)) > 10 and "%" in m.group(1):
+                rules_template = m.group(1).replace("\\n", "\n")
+                break
+
+    use_format_args = (
+        rules_template
+        and format_args_str
+        and "set_rules" not in format_args_str
+        and "copied.variant" not in format_args_str
+    )
+    if use_format_args:
+        try:
+            values = _parse_gd_format_args(format_args_str)
+            rules_template_safe = rules_template.replace("%%", "\x00")
+            rules_text = rules_template_safe % tuple(values)
+            rules_text = rules_text.replace("\x00", "%")
+        except (TypeError, ValueError):
+            raw = extract_rules_from_class(cls_path)
+            rules_text = apply_rules_defaults(raw, "Worker", variant=variant)
+    else:
+        raw = extract_rules_from_class(cls_path)
+        rules_text = apply_rules_defaults(raw, "Worker", variant=variant)
+
+    rules_text = polish_rules_for_website(rules_text, variant, "Worker")
+    if use_format_args and "[color=#" in rules_text:
+        rules_text = bbcode_color_to_html(rules_text)
+    # Plain-text rules are escaped when output in generate_collection_html
+
+    reminders = extract_reminders_from_worker_class(cls_path)
+    reminder_parts = []
+    for r in reminders:
+        r = bbcode_color_to_html(r) if "[color=#" in r else html_escape(r)
+        reminder_parts.append(r)
+    reminder_text = "\n".join(reminder_parts)
+
+    full = rules_text.strip()
+    if reminder_text:
+        full = full + "\n" + reminder_text
+    return full
 
 
 def apply_rules_defaults(text: str, category: str, variant: str = "", color: str = "", rarity: str = "") -> str:
@@ -191,8 +359,9 @@ def polish_rules_for_website(rules: str, variant: str, category: str) -> str:
     rules = re.sub(r"(\d) time1$", r"\1 time", rules)
     rules = re.sub(r"(\d) time1\.0", r"\1 time", rules)
     rules = re.sub(r"gain 1% interest", "gain 10% interest", rules)
-    rules = re.sub(r"Add (\d)\+1 rare", r"Add \1 rare", rules)
-    rules = re.sub(r"Add (\d)\+1\.0 rare", r"Add \1 rare", rules)
+    # Only fix mistaken "Add 1+1" from placeholder; leave "Add 3+1" etc. (Headhunter) intact
+    rules = re.sub(r"Add 1\+1 rare", "Add 1 rare", rules)
+    rules = re.sub(r"Add 1\+1\.0 rare", "Add 1 rare", rules)
     rules = re.sub(r"ontop", "on top", rules)
     rules = re.sub(r"max refill1", "max refill", rules)
     rules = re.sub(r"You cannot draw 1 components", "You cannot draw one color of components", rules)
@@ -447,17 +616,16 @@ def build_collection_data() -> dict:
                 "image": f"assets/images/collection/operations/{to_snake(v)}.png",
             })
 
-    # Workers - use explicit order from parameters
+    # Workers - use explicit order from parameters; title by rarity, rules+reminders with version-colored numbers
     data["workers"] = []
-    for _rarity, variants in WORKER_VARIANTS:
+    for rarity, variants in WORKER_VARIANTS:
         for v in variants:
             cls = classes_dir / "workers" / f"{v}.gd"
-            raw = extract_rules_from_class(cls)
-            rules = polish_rules_for_website(
-                apply_rules_defaults(raw, "Worker", variant=v), v, "Worker")
+            rules = build_worker_rules_and_reminders(cls, v)
             img = f"assets/images/collection/workers/{to_snake(v)}.png"
             data["workers"].append({
                 "title": to_title(v),
+                "rarity": rarity,
                 "rules": rules,
                 "image": img,
             })
@@ -522,13 +690,27 @@ def generate_collection_html(data: dict) -> str:
         items = []
         for piece in data[key]:
             img = piece.get("image", "")
-            title_text = html_escape(piece.get("title", ""))
-            rules = html_escape(piece.get("rules", "")).replace("\u26a1", '<span class="power-icon" aria-hidden="true"></span>')
+            if is_worker:
+                # Worker title: rarity-colored name + green "1.0" (game tooltip style)
+                title_plain = piece.get("title", "")
+                title_plain_esc = html_escape(title_plain)
+                rarity = piece.get("rarity", "common")
+                rarity_hex = PALETTE_HEX.get(rarity, PALETTE_HEX["common"])
+                version_hex = PALETTE_HEX["version_1_0"]
+                title_text = f'<span style="color:#{rarity_hex}">{title_plain_esc}</span> <span style="color:#{version_hex}">1.0</span>'
+                title_alt = f"{title_plain} 1.0"
+            else:
+                title_text = html_escape(piece.get("title", ""))
+                title_alt = piece.get("title", "")
+            rules = piece.get("rules", "")
+            if "<span" not in rules:
+                rules = html_escape(rules)
+            rules = rules.replace("\u26a1", '<span class="power-icon" aria-hidden="true"></span>')
             item_class = "collection-item collection-item-worker" if is_worker else "collection-item"
             if is_upgrade:
-                img_html = f'<div class="collection-piece-img-upgrade"><img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy"></div>'
+                img_html = f'<div class="collection-piece-img-upgrade"><img src="{img}" alt="{html_escape(title_alt)}" class="collection-piece-img" loading="lazy"></div>'
             else:
-                img_html = f'<img src="{img}" alt="{title_text}" class="collection-piece-img" loading="lazy">'
+                img_html = f'<img src="{img}" alt="{html_escape(title_alt)}" class="collection-piece-img" loading="lazy">'
             items.append(f'''            <div class="{item_class}">
               {img_html}
               <div class="collection-piece-text">
