@@ -193,6 +193,49 @@ def build_worker_rules_and_reminders(cls_path: Path, variant: str) -> str:
     """Build full_rules_text + '\\n' + full_reminders_text for 1.0 non-upgraded Worker, with version numbers in green (HTML)."""
     content = cls_path.read_text() if cls_path.exists() else ""
 
+    # Recruiter: built from st (version-colored n) + rarity-colored words; no single format line
+    if variant == "Recruiter":
+        v = PALETTE_HEX["version_1_0"]
+        u, r, l = PALETTE_HEX["uncommon"], PALETTE_HEX["rare"], PALETTE_HEX["legendary"]
+        st = f"[color=#{v}]1[/color]"
+        rules_text = (
+            f"Add {st} [color=#{u}]uncommon[/color], {st} [color=#{r}]rare[/color], & {st} [color=#{l}]legendary[/color] pip "
+            "to each pack distribution"
+        )
+        rules_text = bbcode_color_to_html(rules_text)
+        reminders = extract_reminders_from_worker_class(cls_path)
+        reminder_parts = [bbcode_color_to_html(r) if "[color=#" in r else html_escape(r) for r in reminders]
+        full = rules_text + ("\n" + "\n".join(reminder_parts) if reminder_parts else "")
+        return full
+
+    # Two-part: var ret = '...' or "..." then ret += '...' % [...] (Horizontal Director, MechatronicsTechnician, Maintenance, etc.)
+    two_part = re.search(
+        r"(?:var ret = '([^']*)'|var ret = \"([^\"]*)\")\s+"
+        r"ret \+= '([^']*(?:\\.[^']*)*)'\s*\\?\s*%\s*\[(.*?)\]\s*(?=\)|\n)",
+        content,
+        re.DOTALL,
+    )
+    if two_part:
+        part1 = (two_part.group(1) or two_part.group(2) or "").replace("\\n", "\n")
+        part2_template = two_part.group(3).replace("\\n", "\n")
+        format_args_str = two_part.group(4).strip().replace("\n", " ")
+        if "set_rules" not in format_args_str and "copied.variant" not in format_args_str:
+            try:
+                values = _parse_gd_format_args(format_args_str)
+                part2_template_safe = part2_template.replace("%%", "\x00")
+                part2 = part2_template_safe % tuple(values)
+                part2 = part2.replace("\x00", "%")
+                rules_text = part1 + part2
+                rules_text = polish_rules_for_website(rules_text, variant, "Worker")
+                if "[color=#" in rules_text:
+                    rules_text = bbcode_color_to_html(rules_text)
+                reminders = extract_reminders_from_worker_class(cls_path)
+                reminder_parts = [bbcode_color_to_html(r) if "[color=#" in r else html_escape(r) for r in reminders]
+                full = rules_text + ("\n" + "\n".join(reminder_parts) if reminder_parts else "")
+                return full
+            except (TypeError, ValueError):
+                pass
+
     # Get main rules string: var ret = '...' % [...] or ret += '...' % [...]
     rules_template = None
     format_args_str = None
@@ -208,7 +251,10 @@ def build_worker_rules_and_reminders(cls_path: Path, variant: str) -> str:
             format_args_str = m.group(2)
             break
     if not rules_template:
-        m = re.search(r"(?:var )?ret \+= '([^']*(?:\\.[^']*)*)'\s*%\s*\[([^\]]+)\]", content)
+        m = re.search(
+            r"(?:var )?ret \+= '([^']*(?:\\.[^']*)*)'\s*\\?\s*%\s*\[(.*?)\]\s*(?=\)|\n)",
+            content,
+        )
         if m:
             rules_template = m.group(1).replace("\\n", "\n")
             format_args_str = m.group(2)

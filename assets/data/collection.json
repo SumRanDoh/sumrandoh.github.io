@@ -312,13 +312,13 @@
     {
       "title": "Janitor",
       "rarity": "common",
-      "rules": "\u26a11 for each number left unpacked on the factory floor",
+      "rules": "Upon entering the store, get paid <span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span> for each number left unpacked on the factory floor",
       "image": "assets/images/collection/workers/janitor.png"
     },
     {
       "title": "Maintenance",
       "rarity": "common",
-      "rules": "The first component you discard each hand pays an additional \u26a11",
+      "rules": "The first component you discard each hand pays an additional <span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span>",
       "image": "assets/images/collection/workers/maintenance.png"
     },
     {
@@ -432,19 +432,19 @@
     {
       "title": "Recruiter",
       "rarity": "uncommon",
-      "rules": "Add 1 uncommon, 1 rare, & 1 legendary pip to each pack distribution",
+      "rules": "Add <span style=\"color:#25bf17\">1</span> <span style=\"color:#b353fc\">uncommon</span>, <span style=\"color:#25bf17\">1</span> <span style=\"color:#00f0f0\">rare</span>, &amp; <span style=\"color:#25bf17\">1</span> <span style=\"color:#f03cf0\">legendary</span> pip to each pack distribution",
       "image": "assets/images/collection/workers/recruiter.png"
     },
     {
       "title": "Component Developer",
       "rarity": "uncommon",
-      "rules": "Can embed a component from your hand. Components cost \u26a11 less",
+      "rules": "Can embed a component from your hand\n\nComponents cost <span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span> less",
       "image": "assets/images/collection/workers/component_developer.png"
     },
     {
       "title": "Operation Developer",
       "rarity": "uncommon",
-      "rules": "Can embed an operation from the store. Operations cost \u26a11 less",
+      "rules": "Can embed an operation from the store\n\nOperations cost <span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span> less",
       "image": "assets/images/collection/workers/operation_developer.png"
     },
     {
@@ -456,7 +456,7 @@
     {
       "title": "Horizontal Director",
       "rarity": "uncommon",
-      "rules": "<span style=\"color:#25bf17\">+1</span>",
+      "rules": "Workers to the right of this one get <span style=\"color:#25bf17\">+1</span>",
       "image": "assets/images/collection/workers/horizontal_director.png"
     },
     {
@@ -540,7 +540,7 @@
     {
       "title": "Liquidation Developer",
       "rarity": "rare",
-      "rules": "Can embed a component from your hand. Upon entering the store, sell it for \u26a11",
+      "rules": "<span style=\"color:#ffd147\">\u26a1</span><span style=\"color:#25bf17\">1</span>",
       "image": "assets/images/collection/workers/liquidation_developer.png"
     },
     {
@@ -576,7 +576,7 @@
     {
       "title": "Mechatronics Technician",
       "rarity": "rare",
-      "rules": "Whenever a number's movement direction changes, conveyors get +1 until the end of the month",
+      "rules": "Whenever a number's movement direction changes, conveyors get <span style=\"color:#25bf17\">+1</span> until the end of the month",
       "image": "assets/images/collection/workers/mechatronics_technician.png"
     },
     {
