@@ -18,11 +18,18 @@
 
 
     // Direct scroll (instant, no animation); offset so target isn't under sticky header
+    // Collection section links (nav/dropdown) trigger expandCollectionSection so section uncollapses
     $(function () {
-        $('.nav-link, .smoth-scroll, .dropdown-item').on('click', function (event) {
+        $(document).on('click', '.nav-link, .smoth-scroll, .dropdown-item', function (event) {
             var $anchor = $(this);
             var href = $anchor.attr('href');
             if (href && href.indexOf('#') === 0) {
+                var id = href.substring(1);
+                if (id.indexOf('collection-') === 0) {
+                    event.preventDefault();
+                    $(document).trigger('expandCollectionSection', [id]);
+                    return;
+                }
                 var $target = $(href);
                 if ($target.length) {
                     var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
@@ -72,6 +79,10 @@
                 $('html, body').scrollTop(Math.max(0, $section.offset().top - offset));
             }
         }
+
+        $(document).on('expandCollectionSection', function (e, sectionId) {
+            expandSection(sectionId);
+        });
 
         $toggles.on('click', function () {
             var sectionId = $(this).data('section-id');

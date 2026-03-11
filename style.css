@@ -609,6 +609,10 @@ a:link {
     padding-top: 50px;
     padding-bottom: 50px;
 }
+.collection-section:not(.expanded) {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 /* Collapsed by default; only titles visible */
 .collection-section-body {
     display: none;
@@ -620,12 +624,11 @@ a:link {
     color: #FFA500;
     font-size: 36px;
     text-align: center;
-    margin-bottom: 0;
-    margin-top: 0;
+    margin: 0;
     position: sticky;
     top: 56px;
     z-index: 1020;
-    padding: 8px 0;
+    padding: 12px 16px;
     min-height: 52px;
     box-sizing: border-box;
     display: flex;
@@ -644,7 +647,7 @@ a:link {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1019;
+    z-index: 1035;
     color: #FFA500;
     font-size: 36px;
     text-align: center;
@@ -659,7 +662,7 @@ a:link {
     box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
 }
 .collection-next-title-bar.is-visible {
-    display: flex;
+    display: flex !important;
 }
 .collection-section.bg-dark .collection-section-title {
     background-color: #343a40;
