@@ -637,11 +637,29 @@ a:link {
 .collection-section.expanded .collection-section-title {
     margin-bottom: 2rem;
 }
-.collection-section-title.collection-section-title-next {
-    position: sticky;
+/* Fixed bar at bottom showing next section title when a non-last category is expanded */
+.collection-next-title-bar {
+    display: none;
+    position: fixed;
     bottom: 0;
-    top: auto;
+    left: 0;
+    right: 0;
     z-index: 1019;
+    color: #FFA500;
+    font-size: 36px;
+    text-align: center;
+    padding: 8px 0;
+    min-height: 52px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    background-color: #222222;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+}
+.collection-next-title-bar.is-visible {
+    display: flex;
 }
 .collection-section.bg-dark .collection-section-title {
     background-color: #343a40;
