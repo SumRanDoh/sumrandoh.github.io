@@ -344,12 +344,15 @@ button:focus {
     position: relative;
 }
 .prismatics-dropdown > .nav-link {
-    background-color: transparent;
+    background-color: transparent !important;
 }
 .prismatics-dropdown > .nav-link:hover,
 .prismatics-dropdown > .nav-link:focus,
-.prismatics-dropdown > .nav-link:active {
-    background-color: transparent;
+.prismatics-dropdown > .nav-link:active,
+.prismatics-dropdown > .nav-link.show {
+    background-color: transparent !important;
+    box-shadow: none;
+    outline: none;
 }
 .prismatics-dropdown > .nav-link::after {
     content: '';
@@ -391,10 +394,15 @@ button:focus {
     color: #fff;
     font-size: 24px;
     white-space: nowrap;
+    background-color: transparent;
 }
-.prismatics-dropdown-menu .dropdown-item:hover {
+.prismatics-dropdown-menu .dropdown-item:hover,
+.prismatics-dropdown-menu .dropdown-item:focus,
+.prismatics-dropdown-menu .dropdown-item:active {
     background-color: #444;
     color: #FFA500;
+    box-shadow: none;
+    outline: none;
 }
 /* Hide flat category links on desktop */
 .prismatics-category-mobile {
