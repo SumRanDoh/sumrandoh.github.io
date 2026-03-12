@@ -710,7 +710,9 @@ a:link {
 .collection-next-title-bar-unstuck {
     position: static !important;
     display: flex !important;
-    width: 100%;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    box-sizing: border-box;
     pointer-events: none;
 }
 .collection-list {
