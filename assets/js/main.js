@@ -54,6 +54,29 @@
         }
 
         var BAR_HEIGHT = 64;
+        var barPollTimer = null;
+        var barRafId = null;
+        function scheduleBarUpdate() {
+            if (barRafId != null) return;
+            barRafId = requestAnimationFrame(function () {
+                barRafId = null;
+                updateBarVisibility();
+            });
+        }
+
+        function updateBarFromRects(expandedTitleRect, nextTitleRect) {
+            var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
+            var threshold = viewportBottom - BAR_HEIGHT;
+            if (expandedTitleRect && expandedTitleRect.bottom >= threshold) {
+                $bar.removeClass('is-visible');
+                return;
+            }
+            if (nextTitleRect && nextTitleRect.top <= threshold) {
+                $bar.removeClass('is-visible');
+                return;
+            }
+            $bar.addClass('is-visible');
+        }
 
         function updateBarVisibility() {
             var $expanded = $('[data-collection-section].expanded');
@@ -68,25 +91,18 @@
                 $bar.addClass('is-visible');
                 return;
             }
-            var viewportBottom = $(window).height();
-            var threshold = viewportBottom - BAR_HEIGHT;
             var expandedTitleRect = $expandedTitle[0].getBoundingClientRect();
             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-            // Unstick (push down): expanded section title scrolled down to just above the bar
-            if (expandedTitleRect.bottom >= threshold) {
-                $bar.removeClass('is-visible');
-                return;
-            }
-            // Unstick (push up): next section's real title has scrolled up so it would be at or above the bar
-            if (nextTitleRect.top <= threshold) {
-                $bar.removeClass('is-visible');
-                return;
-            }
-            $bar.addClass('is-visible');
+            updateBarFromRects(expandedTitleRect, nextTitleRect);
         }
 
         function expandSection(sectionId) {
-            $(window).off('scroll.collectionNextBar');
+            if (barPollTimer) {
+                clearInterval(barPollTimer);
+                barPollTimer = null;
+            }
+            $(window).off('scroll.collectionNextBar resize.collectionNextBar');
+            $(document).off('scroll.collectionNextBar');
             $sections.removeClass('expanded');
             $toggles.attr('aria-expanded', 'false');
             $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
@@ -107,7 +123,10 @@
                             expandSection($next.attr('id'));
                         }
                     });
-                    $(window).on('scroll.collectionNextBar', updateBarVisibility);
+                    $(window).on('scroll.collectionNextBar', scheduleBarUpdate);
+                    $(document).on('scroll.collectionNextBar', scheduleBarUpdate);
+                    $(window).on('resize.collectionNextBar', scheduleBarUpdate);
+                    barPollTimer = setInterval(updateBarVisibility, 120);
                     updateBarVisibility();
                 }
                 var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
