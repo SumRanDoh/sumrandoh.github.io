@@ -54,6 +54,7 @@
         }
 
         var BAR_HEIGHT = 64;
+        var TITLE_BORDER = 2; /* 2px black borders on category title bars and bottom bar */
         var barPollTimer = null;
         var barRafId = null;
         function scheduleBarUpdate() {
@@ -80,14 +81,14 @@
         function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
-            var unstickOffset = 32;
-            /* Sticky title scrolled down into bar zone: wait before unstick */
-            if (expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset) {
+            var unstickOffset = 96;
+            /* Sticky title: rect is h2; visual bar has 2px bottom border below h2, so require 2px more scroll */
+            if (expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset + TITLE_BORDER) {
                 collapseAndUnstickBar($expanded, $next);
                 return;
             }
-            /* Next section title entering bar zone: wait before unstick */
-            if (nextTitleRect && nextTitleRect.top <= threshold - unstickOffset) {
+            /* Next title: require it to be TITLE_BORDER further into bar zone (visual bar has 2px top border) */
+            if (nextTitleRect && nextTitleRect.top <= threshold - unstickOffset - TITLE_BORDER) {
                 collapseAndUnstickBar($expanded, $next);
                 return;
             }
@@ -125,7 +126,7 @@
             if (scrollCollapsedSectionId) {
                 var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
                 var threshold = viewportBottom - BAR_HEIGHT;
-                var unstickOffset = 32;
+                var unstickOffset = 96;
                 var $section = $('#' + scrollCollapsedSectionId);
                 var $nextForCollapsed = $section.next('[data-collection-section]');
                 if ($section.length) {
@@ -134,7 +135,7 @@
                         var $nextTitle = $nextForCollapsed.find('.collection-section-toggle').first();
                         if ($nextTitle.length) {
                             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-                            if (nextTitleRect.top > threshold - unstickOffset) shouldReexpand = true;
+                            if (nextTitleRect.top > threshold - unstickOffset - TITLE_BORDER) shouldReexpand = true;
                         }
                     }
                     if (!shouldReexpand) {
@@ -142,7 +143,7 @@
                         if ($sectionTitle.length) {
                             var sectionTitleRect = $sectionTitle[0].getBoundingClientRect();
                             /* Only re-expand when section title is visible and above bar (user scrolled back up), not when title is above viewport */
-                            if (sectionTitleRect.bottom > 0 && sectionTitleRect.bottom < threshold + unstickOffset) shouldReexpand = true;
+                            if (sectionTitleRect.bottom > 0 && sectionTitleRect.bottom < threshold + unstickOffset + TITLE_BORDER) shouldReexpand = true;
                         }
                     }
                     if (shouldReexpand) {
