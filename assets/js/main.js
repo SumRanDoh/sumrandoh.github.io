@@ -73,7 +73,7 @@
             var now = Date.now();
             var action = opts && opts.action;
             if (action) {
-                if (action === 'unstick') { /* always log */ }
+                if (action === 'unstick' || action === 'restick') { /* always log */ }
                 else if (action === lastLogAction && now - lastLogTime < positionLogActionThrottleMs) return;
             } else if (now - lastLogTime < positionLogThrottleMs) return;
             lastLogTime = now;
@@ -146,12 +146,7 @@
             /* Append to expanded section so bar stays on screen and scrolls down; do NOT collapse section (avoids re-expand and jump) */
             $expanded.append($bar);
             $bar.addClass('collection-next-title-bar-unstuck');
-            if (barPollTimer) {
-                clearInterval(barPollTimer);
-                barPollTimer = null;
-            }
-            $(window).off('scroll.collectionNextBar resize.collectionNextBar');
-            $(document).off('scroll.collectionNextBar');
+            /* Keep poll and scroll handlers so we can restick when user scrolls back up */
         }
 
         function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
@@ -176,6 +171,19 @@
             var $next = $expanded.next('[data-collection-section]');
 
             if ($bar.hasClass('collection-next-title-bar-unstuck')) {
+                var barEl = $bar[0];
+                if (barEl && barEl.getBoundingClientRect) {
+                    var barRect = barEl.getBoundingClientRect();
+                    var vh = window.innerHeight || document.documentElement.clientHeight;
+                    /* Restick when bar (in flow) has scrolled back to the bottom of the viewport */
+                    if (barRect.bottom >= vh - 10) {
+                        $('body').append($bar);
+                        $bar.removeClass('collection-next-title-bar-unstuck');
+                        $bar.addClass('is-visible');
+                        capturePositionSnapshot({ action: 'restick' });
+                        return;
+                    }
+                }
                 capturePositionSnapshot({ action: 'barUnstuck' });
                 return;
             }
