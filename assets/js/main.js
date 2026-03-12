@@ -97,6 +97,9 @@
         }
 
         function expandSection(sectionId) {
+            var $section = $('#' + sectionId);
+            if (!$section.length) return;
+            var wasExpanded = $section.hasClass('expanded');
             if (barPollTimer) {
                 clearInterval(barPollTimer);
                 barPollTimer = null;
@@ -106,32 +109,30 @@
             $sections.removeClass('expanded');
             $toggles.attr('aria-expanded', 'false');
             $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
-            var $section = $('#' + sectionId);
-            if ($section.length) {
-                $section.addClass('expanded');
-                $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
-                var $next = $section.next('[data-collection-section]');
-                if ($next.length) {
-                    var titleText = $next.find('.collection-section-toggle').first().text().trim();
-                    $bar.text(titleText).data('section-id', $next.attr('id'));
-                    $bar.on('click', function () {
+            if (wasExpanded) return;
+            $section.addClass('expanded');
+            $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
+            var $next = $section.next('[data-collection-section]');
+            if ($next.length) {
+                var titleText = $next.find('.collection-section-toggle').first().text().trim();
+                $bar.text(titleText).data('section-id', $next.attr('id'));
+                $bar.on('click', function () {
+                    expandSection($next.attr('id'));
+                });
+                $bar.on('keydown', function (e) {
+                    if (e.which === 13 || e.which === 32) {
+                        e.preventDefault();
                         expandSection($next.attr('id'));
-                    });
-                    $bar.on('keydown', function (e) {
-                        if (e.which === 13 || e.which === 32) {
-                            e.preventDefault();
-                            expandSection($next.attr('id'));
-                        }
-                    });
-                    $(window).on('scroll.collectionNextBar', scheduleBarUpdate);
-                    $(document).on('scroll.collectionNextBar', scheduleBarUpdate);
-                    $(window).on('resize.collectionNextBar', scheduleBarUpdate);
-                    barPollTimer = setInterval(updateBarVisibility, 120);
-                    updateBarVisibility();
-                }
-                var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
-                $('html, body').scrollTop(Math.max(0, $section.offset().top - offset));
+                    }
+                });
+                $(window).on('scroll.collectionNextBar', scheduleBarUpdate);
+                $(document).on('scroll.collectionNextBar', scheduleBarUpdate);
+                $(window).on('resize.collectionNextBar', scheduleBarUpdate);
+                barPollTimer = setInterval(updateBarVisibility, 120);
+                updateBarVisibility();
             }
+            var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
+            $('html, body').scrollTop(Math.max(0, $section.offset().top - offset));
         }
 
         $(document).on('expandCollectionSection', function (e, sectionId) {

@@ -339,6 +339,10 @@ button:focus {
     background-color: #222222;
 }
 
+.header {
+    border-bottom: 2px solid #000;
+}
+
 /* Prismatics dropdown: show on hover (desktop only) */
 .prismatics-dropdown {
     position: relative;
@@ -643,7 +647,6 @@ a:link {
     cursor: pointer;
     user-select: none;
     background: transparent;
-    margin-bottom: -1px;
 }
 .collection-section-title::before {
     content: '';
@@ -655,24 +658,9 @@ a:link {
     bottom: 0;
     background-color: #222222;
     border: 2px solid #000;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
     box-sizing: border-box;
     z-index: -1;
     pointer-events: none;
-}
-.collection-section.expanded .collection-section-title {
-    margin-bottom: 0;
-}
-/* First/last section titles: 2px outer borders; touching sides stay 1px */
-.collection-sections-wrapper .collection-section:first-child .collection-section-title::before {
-    border-top-width: 2px;
-}
-.collection-sections-wrapper .collection-section:last-child .collection-section-title::before {
-    border-bottom-width: 2px;
-}
-.collection-sections-wrapper .collection-section:last-child .collection-section-title {
-    margin-bottom: 0;
 }
 /* Fixed bar at bottom showing next section title when a non-last category is expanded */
 .collection-next-title-bar {
