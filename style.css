@@ -606,9 +606,6 @@ a:link {
    Collection Sections (game pieces)
 ::::::::::::::::::::::::::::::::::::*/
 /* Uncouple backgrounds: section no fill; title bar = darker gray, body = lighter gray */
-.collection-sections-wrapper {
-    overflow-x: hidden;
-}
 .collection-section {
     padding-top: 0;
     padding-bottom: 0;
@@ -628,43 +625,53 @@ a:link {
     padding-top: 1.5rem;
     padding-bottom: 2rem;
 }
-/* Full-width title bar: break out of .container so background/border span viewport */
+/* Sticky title stays in flow (so sticky works); full-width bar via ::before */
 .collection-section-title {
+    position: sticky;
     color: #FFA500;
     font-size: 36px;
     text-align: center;
     margin: 0;
-    position: sticky;
     top: 56px;
     z-index: 1020;
-    width: 100vw;
-    max-width: 100vw;
-    margin-left: calc(50% - 50vw);
     box-sizing: border-box;
     padding: 8px 16px;
-    padding-left: calc(50vw - 50% + 16px);
-    padding-right: calc(50vw - 50% + 16px);
     min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     user-select: none;
+    background: transparent;
+    margin-bottom: -1px;
+}
+.collection-section-title::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    top: 0;
+    bottom: 0;
     background-color: #222222;
     border: 2px solid #000;
     border-top-width: 1px;
     border-bottom-width: 1px;
-    margin-bottom: -1px;
+    box-sizing: border-box;
+    z-index: -1;
+    pointer-events: none;
 }
 .collection-section.expanded .collection-section-title {
     margin-bottom: 0;
 }
 /* First/last section titles: 2px outer borders; touching sides stay 1px */
-.collection-sections-wrapper .collection-section:first-child .collection-section-title {
+.collection-sections-wrapper .collection-section:first-child .collection-section-title::before {
     border-top-width: 2px;
 }
-.collection-sections-wrapper .collection-section:last-child .collection-section-title {
+.collection-sections-wrapper .collection-section:last-child .collection-section-title::before {
     border-bottom-width: 2px;
+}
+.collection-sections-wrapper .collection-section:last-child .collection-section-title {
     margin-bottom: 0;
 }
 /* Fixed bar at bottom showing next section title when a non-last category is expanded */
