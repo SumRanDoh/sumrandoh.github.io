@@ -57,14 +57,17 @@
         var barPollTimer = null;
         var barRafId = null;
 
-        /* Debug: log positions when ?debug=1; download with Cmd/Ctrl+Shift+L or the "Download position log" button */
+        /* Debug: log title-label positions when ?debug=1; download with Cmd/Ctrl+Shift+L or the "Download position log" button */
         var positionLog = [];
-        var positionLogMax = 1000;
+        var positionLogMax = 2000;
         var lastLogTime = 0;
         var lastLogAction = null;
-        var positionLogThrottleMs = 150;
-        var positionLogActionThrottleMs = 500;
+        var positionLogThrottleMs = 40;
+        var positionLogActionThrottleMs = 200;
         var debugMode = typeof window !== 'undefined' && /[?&]debug=1/.test(window.location.search);
+        function rectToObj(r) {
+            return r ? { top: r.top, bottom: r.bottom, left: r.left, right: r.right, height: r.height, width: r.width } : null;
+        }
         function capturePositionSnapshot(opts) {
             if (!debugMode) return;
             var now = Date.now();
@@ -75,20 +78,29 @@
             } else if (now - lastLogTime < positionLogThrottleMs) return;
             lastLogTime = now;
             lastLogAction = action || null;
+            var vh = window.innerHeight || document.documentElement.clientHeight;
             var barEl = $bar[0];
             var entry = {
                 t: now,
                 scrollY: window.pageYOffset || document.documentElement.scrollTop,
-                viewportHeight: window.innerHeight || document.documentElement.clientHeight,
-                threshold: (window.innerHeight || document.documentElement.clientHeight) - BAR_HEIGHT,
+                viewportHeight: vh,
+                /* Reference: top sticky should sit at stickyTopPx; bar zone starts at barZoneTop */
+                stickyTopPx: 54,
+                barZoneTop: vh - BAR_HEIGHT,
                 barUnstuck: $bar.hasClass('collection-next-title-bar-unstuck'),
-                barParent: barEl && barEl.parentNode ? (barEl.parentNode.id || barEl.parentNode.className || barEl.parentNode.tagName) : null
+                barParent: barEl && barEl.parentNode ? (barEl.parentNode.id || barEl.parentNode.className || barEl.parentNode.tagName) : null,
+                /* Title label positions (focus of log) */
+                topStickyTitle: opts && opts.topStickyTitle ? opts.topStickyTitle : null,
+                nextSectionTitle: opts && opts.nextSectionTitle ? opts.nextSectionTitle : null,
+                bottomBar: null
             };
-            if (opts) Object.keys(opts).forEach(function (k) { entry[k] = opts[k]; });
             if (barEl && barEl.getBoundingClientRect) {
                 var r = barEl.getBoundingClientRect();
-                entry.barRect = { top: r.top, right: r.right, bottom: r.bottom, left: r.left, width: r.width, height: r.height };
+                entry.bottomBar = rectToObj(r);
             }
+            if (opts) Object.keys(opts).forEach(function (k) {
+                if (k !== 'topStickyTitle' && k !== 'nextSectionTitle') entry[k] = opts[k];
+            });
             positionLog.push(entry);
             if (positionLog.length > positionLogMax) positionLog.shift();
         }
@@ -121,7 +133,15 @@
 
         function unstickBarOnly($expanded, $next) {
             if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
-            capturePositionSnapshot({ action: 'unstick', expandedId: $expanded.attr('id'), nextId: $next.attr('id') });
+            var $et = $expanded.find('.collection-section-toggle').first();
+            var $nt = $next.find('.collection-section-toggle').first();
+            capturePositionSnapshot({
+                action: 'unstick',
+                expandedId: $expanded.attr('id'),
+                nextId: $next.attr('id'),
+                topStickyTitle: $et.length ? rectToObj($et[0].getBoundingClientRect()) : null,
+                nextSectionTitle: $nt.length ? rectToObj($nt[0].getBoundingClientRect()) : null
+            });
             $bar.addClass('is-visible');
             /* Append to expanded section so bar stays on screen and scrolls down; do NOT collapse section (avoids re-expand and jump) */
             $expanded.append($bar);
@@ -176,8 +196,8 @@
             capturePositionSnapshot({
                 expandedId: $expanded.attr('id'),
                 nextId: $next.attr('id'),
-                expandedTitleRect: { top: expandedTitleRect.top, right: expandedTitleRect.right, bottom: expandedTitleRect.bottom, left: expandedTitleRect.left },
-                nextTitleRect: { top: nextTitleRect.top, right: nextTitleRect.right, bottom: nextTitleRect.bottom, left: nextTitleRect.left }
+                topStickyTitle: rectToObj(expandedTitleRect),
+                nextSectionTitle: rectToObj(nextTitleRect)
             });
             updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next);
         }
