@@ -42,7 +42,7 @@
 
     /*:::::::::::::::::::::::::::::::::::
        Collection sections: collapsed by default, click title to expand
-       Next section title fixed to bottom of screen when a non-last category is expanded
+       Next section title fixed to bottom; unstick when top title scrolls down to it or next title scrolls up into view
     ::::::::::::::::::::::::::::::::::::*/
     $(function () {
         var $sections = $('[data-collection-section]');
@@ -53,7 +53,40 @@
             $('body').append($bar);
         }
 
+        var BAR_HEIGHT = 64;
+
+        function updateBarVisibility() {
+            var $expanded = $('[data-collection-section].expanded');
+            var $next = $expanded.next('[data-collection-section]');
+            if (!$expanded.length || !$next.length) {
+                $bar.removeClass('is-visible');
+                return;
+            }
+            var $expandedTitle = $expanded.find('.collection-section-toggle').first();
+            var $nextTitle = $next.find('.collection-section-toggle').first();
+            if (!$expandedTitle.length || !$nextTitle.length) {
+                $bar.addClass('is-visible');
+                return;
+            }
+            var viewportBottom = $(window).height();
+            var threshold = viewportBottom - BAR_HEIGHT;
+            var expandedTitleRect = $expandedTitle[0].getBoundingClientRect();
+            var nextTitleRect = $nextTitle[0].getBoundingClientRect();
+            // Unstick (push down): expanded section title scrolled down to just above the bar
+            if (expandedTitleRect.bottom >= threshold) {
+                $bar.removeClass('is-visible');
+                return;
+            }
+            // Unstick (push up): next section's real title has scrolled up so it would be at or above the bar
+            if (nextTitleRect.top <= threshold) {
+                $bar.removeClass('is-visible');
+                return;
+            }
+            $bar.addClass('is-visible');
+        }
+
         function expandSection(sectionId) {
+            $(window).off('scroll.collectionNextBar');
             $sections.removeClass('expanded');
             $toggles.attr('aria-expanded', 'false');
             $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
@@ -64,7 +97,7 @@
                 var $next = $section.next('[data-collection-section]');
                 if ($next.length) {
                     var titleText = $next.find('.collection-section-toggle').first().text().trim();
-                    $bar.text(titleText).data('section-id', $next.attr('id')).addClass('is-visible');
+                    $bar.text(titleText).data('section-id', $next.attr('id'));
                     $bar.on('click', function () {
                         expandSection($next.attr('id'));
                     });
@@ -74,6 +107,8 @@
                             expandSection($next.attr('id'));
                         }
                     });
+                    $(window).on('scroll.collectionNextBar', updateBarVisibility);
+                    updateBarVisibility();
                 }
                 var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
                 $('html, body').scrollTop(Math.max(0, $section.offset().top - offset));
