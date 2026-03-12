@@ -156,6 +156,10 @@ img {
     padding: 50px 0px 50px 0px;
 }
 
+#prismatics {
+    border-top: 2px solid #000;
+}
+
 .pb-70 {
     padding-bottom: 70px;
 }
