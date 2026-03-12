@@ -341,6 +341,10 @@ button:focus {
 
 .header .navbar,
 .navbar.gray {
+    height: 56px;
+    box-sizing: border-box;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
     border-bottom: 2px solid #000 !important;
 }
 
