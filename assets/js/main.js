@@ -56,6 +56,61 @@
         var BAR_HEIGHT = 64;
         var barPollTimer = null;
         var barRafId = null;
+
+        /* Debug: log positions when ?debug=1; download with Cmd/Ctrl+Shift+L or the "Download position log" button */
+        var positionLog = [];
+        var positionLogMax = 1000;
+        var lastLogTime = 0;
+        var lastLogAction = null;
+        var positionLogThrottleMs = 150;
+        var positionLogActionThrottleMs = 500;
+        var debugMode = typeof window !== 'undefined' && /[?&]debug=1/.test(window.location.search);
+        function capturePositionSnapshot(opts) {
+            if (!debugMode) return;
+            var now = Date.now();
+            var action = opts && opts.action;
+            if (action) {
+                if (action === 'unstick') { /* always log */ }
+                else if (action === lastLogAction && now - lastLogTime < positionLogActionThrottleMs) return;
+            } else if (now - lastLogTime < positionLogThrottleMs) return;
+            lastLogTime = now;
+            lastLogAction = action || null;
+            var barEl = $bar[0];
+            var entry = {
+                t: now,
+                scrollY: window.pageYOffset || document.documentElement.scrollTop,
+                viewportHeight: window.innerHeight || document.documentElement.clientHeight,
+                threshold: (window.innerHeight || document.documentElement.clientHeight) - BAR_HEIGHT,
+                barUnstuck: $bar.hasClass('collection-next-title-bar-unstuck'),
+                barParent: barEl && barEl.parentNode ? (barEl.parentNode.id || barEl.parentNode.className || barEl.parentNode.tagName) : null
+            };
+            if (opts) Object.keys(opts).forEach(function (k) { entry[k] = opts[k]; });
+            if (barEl && barEl.getBoundingClientRect) {
+                var r = barEl.getBoundingClientRect();
+                entry.barRect = { top: r.top, right: r.right, bottom: r.bottom, left: r.left, width: r.width, height: r.height };
+            }
+            positionLog.push(entry);
+            if (positionLog.length > positionLogMax) positionLog.shift();
+        }
+        function downloadPositionLog() {
+            var blob = new Blob([JSON.stringify(positionLog, null, 2)], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'collection-position-log-' + (new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)) + '.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+        if (debugMode) {
+            $(document).on('keydown.positionLog', function (e) {
+                if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.which === 76) {
+                    e.preventDefault();
+                    downloadPositionLog();
+                }
+            });
+            var $btn = $('<button type="button" class="btn btn-sm btn-secondary" style="position:fixed;bottom:80px;right:16px;z-index:9999;">Download position log</button>');
+            $btn.on('click', downloadPositionLog);
+            $('body').append($btn);
+        }
         function scheduleBarUpdate() {
             if (barRafId != null) return;
             barRafId = requestAnimationFrame(function () {
@@ -66,6 +121,7 @@
 
         function unstickBarOnly($expanded, $next) {
             if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
+            capturePositionSnapshot({ action: 'unstick', expandedId: $expanded.attr('id'), nextId: $next.attr('id') });
             $bar.addClass('is-visible');
             /* Append to expanded section so bar stays on screen and scrolls down; do NOT collapse section (avoids re-expand and jump) */
             $expanded.append($bar);
@@ -100,10 +156,12 @@
             var $next = $expanded.next('[data-collection-section]');
 
             if ($bar.hasClass('collection-next-title-bar-unstuck')) {
+                capturePositionSnapshot({ action: 'barUnstuck' });
                 return;
             }
 
             if (!$expanded.length || !$next.length) {
+                capturePositionSnapshot({ action: 'barHidden', expandedId: $expanded.length ? $expanded.attr('id') : null, nextId: $next.length ? $next.attr('id') : null });
                 $bar.removeClass('is-visible');
                 return;
             }
@@ -115,6 +173,12 @@
             }
             var expandedTitleRect = $expandedTitle[0].getBoundingClientRect();
             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
+            capturePositionSnapshot({
+                expandedId: $expanded.attr('id'),
+                nextId: $next.attr('id'),
+                expandedTitleRect: { top: expandedTitleRect.top, right: expandedTitleRect.right, bottom: expandedTitleRect.bottom, left: expandedTitleRect.left },
+                nextTitleRect: { top: nextTitleRect.top, right: nextTitleRect.right, bottom: nextTitleRect.bottom, left: nextTitleRect.left }
+            });
             updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next);
         }
 
