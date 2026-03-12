@@ -64,19 +64,30 @@
             });
         }
 
-        function updateBarFromRects(expandedTitleRect, nextTitleRect) {
+        function updateBarFromRects(expandedTitleRect, nextTitleRect, $next) {
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
             if (expandedTitleRect && expandedTitleRect.bottom >= threshold) {
                 $bar.removeClass('is-visible');
                 return;
             }
-            /* Hide only when next title has swept up into the bar (bottom edge at bar top), not when it first enters zone */
             if (nextTitleRect && nextTitleRect.bottom <= threshold) {
-                $bar.removeClass('is-visible');
+                unstickBar($next);
                 return;
             }
             $bar.addClass('is-visible');
+        }
+
+        function unstickBar($next) {
+            if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
+            $next.before($bar);
+            $bar.addClass('collection-next-title-bar-unstuck');
+            if (barPollTimer) {
+                clearInterval(barPollTimer);
+                barPollTimer = null;
+            }
+            $(window).off('scroll.collectionNextBar resize.collectionNextBar');
+            $(document).off('scroll.collectionNextBar');
         }
 
         function updateBarVisibility() {
@@ -86,6 +97,7 @@
                 $bar.removeClass('is-visible');
                 return;
             }
+            if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
             var $expandedTitle = $expanded.find('.collection-section-toggle').first();
             var $nextTitle = $next.find('.collection-section-toggle').first();
             if (!$expandedTitle.length || !$nextTitle.length) {
@@ -94,7 +106,7 @@
             }
             var expandedTitleRect = $expandedTitle[0].getBoundingClientRect();
             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-            updateBarFromRects(expandedTitleRect, nextTitleRect);
+            updateBarFromRects(expandedTitleRect, nextTitleRect, $next);
         }
 
         function expandSection(sectionId) {
@@ -109,7 +121,10 @@
             $(document).off('scroll.collectionNextBar');
             $sections.removeClass('expanded');
             $toggles.attr('aria-expanded', 'false');
-            $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
+            if ($bar.parent()[0] !== document.body) {
+                $('body').append($bar);
+            }
+            $bar.removeClass('is-visible collection-next-title-bar-unstuck').removeData('section-id').off('click keydown');
             if (wasExpanded) return;
             $section.addClass('expanded');
             $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
