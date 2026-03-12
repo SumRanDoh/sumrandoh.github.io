@@ -64,7 +64,9 @@
             });
         }
 
-        function updateBarFromRects(expandedTitleRect, nextTitleRect, $next) {
+        var scrollCollapsedSectionId = null;
+
+        function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
             if (expandedTitleRect && expandedTitleRect.bottom >= threshold) {
@@ -72,32 +74,62 @@
                 return;
             }
             if (nextTitleRect && nextTitleRect.bottom <= threshold) {
-                unstickBar($next);
+                $expanded.removeClass('expanded');
+                $expanded.find('.collection-section-toggle').attr('aria-expanded', 'false');
+                scrollCollapsedSectionId = $expanded.attr('id');
+                $bar.removeClass('is-visible');
                 return;
             }
             $bar.addClass('is-visible');
         }
 
-        function unstickBar($next) {
-            if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
-            $next.before($bar);
-            $bar.addClass('collection-next-title-bar-unstuck');
-            if (barPollTimer) {
-                clearInterval(barPollTimer);
-                barPollTimer = null;
+        function reexpandFromScroll($section) {
+            var $next = $section.next('[data-collection-section]');
+            $section.addClass('expanded');
+            $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
+            if ($next.length) {
+                var titleText = $next.find('.collection-section-toggle').first().text().trim();
+                $bar.text(titleText).data('section-id', $next.attr('id'));
+                $bar.off('click keydown').on('click', function () {
+                    expandSection($next.attr('id'));
+                }).on('keydown', function (e) {
+                    if (e.which === 13 || e.which === 32) {
+                        e.preventDefault();
+                        expandSection($next.attr('id'));
+                    }
+                });
             }
-            $(window).off('scroll.collectionNextBar resize.collectionNextBar');
-            $(document).off('scroll.collectionNextBar');
+            scrollCollapsedSectionId = null;
+            updateBarVisibility();
         }
 
         function updateBarVisibility() {
             var $expanded = $('[data-collection-section].expanded');
             var $next = $expanded.next('[data-collection-section]');
+
+            if (scrollCollapsedSectionId) {
+                var $section = $('#' + scrollCollapsedSectionId);
+                var $nextForCollapsed = $section.next('[data-collection-section]');
+                if ($section.length && $nextForCollapsed.length) {
+                    var $nextTitle = $nextForCollapsed.find('.collection-section-toggle').first();
+                    if ($nextTitle.length) {
+                        var nextTitleRect = $nextTitle[0].getBoundingClientRect();
+                        var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
+                        var threshold = viewportBottom - BAR_HEIGHT;
+                        if (nextTitleRect.bottom > threshold) {
+                            reexpandFromScroll($section);
+                            return;
+                        }
+                    }
+                }
+                $bar.removeClass('is-visible');
+                return;
+            }
+
             if (!$expanded.length || !$next.length) {
                 $bar.removeClass('is-visible');
                 return;
             }
-            if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
             var $expandedTitle = $expanded.find('.collection-section-toggle').first();
             var $nextTitle = $next.find('.collection-section-toggle').first();
             if (!$expandedTitle.length || !$nextTitle.length) {
@@ -106,7 +138,7 @@
             }
             var expandedTitleRect = $expandedTitle[0].getBoundingClientRect();
             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-            updateBarFromRects(expandedTitleRect, nextTitleRect, $next);
+            updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next);
         }
 
         function expandSection(sectionId) {
@@ -119,12 +151,10 @@
             }
             $(window).off('scroll.collectionNextBar resize.collectionNextBar');
             $(document).off('scroll.collectionNextBar');
+            scrollCollapsedSectionId = null;
             $sections.removeClass('expanded');
             $toggles.attr('aria-expanded', 'false');
-            if ($bar.parent()[0] !== document.body) {
-                $('body').append($bar);
-            }
-            $bar.removeClass('is-visible collection-next-title-bar-unstuck').removeData('section-id').off('click keydown');
+            $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
             if (wasExpanded) return;
             $section.addClass('expanded');
             $section.find('.collection-section-toggle').attr('aria-expanded', 'true');

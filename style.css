@@ -706,13 +706,6 @@ a:link {
 .collection-next-title-bar.is-visible {
     display: flex !important;
 }
-/* Unstuck: bar is in document flow so it scrolls down off screen instead of disappearing */
-.collection-next-title-bar-unstuck {
-    position: static !important;
-    display: flex !important;
-    width: 100%;
-    pointer-events: none;
-}
 .collection-list {
     display: flex;
     flex-direction: column;
