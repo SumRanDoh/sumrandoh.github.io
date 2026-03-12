@@ -80,7 +80,7 @@
         function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
-            var unstickOffset = 96;
+            var unstickOffset = 8;
             /* Sticky title scrolled down into bar zone: wait before unstick */
             if (expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset) {
                 collapseAndUnstickBar($expanded, $next);
@@ -125,7 +125,7 @@
             if (scrollCollapsedSectionId) {
                 var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
                 var threshold = viewportBottom - BAR_HEIGHT;
-                var unstickOffset = 96;
+                var unstickOffset = 8;
                 var $section = $('#' + scrollCollapsedSectionId);
                 var $nextForCollapsed = $section.next('[data-collection-section]');
                 if ($section.length) {
