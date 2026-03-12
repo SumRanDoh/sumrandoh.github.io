@@ -80,13 +80,14 @@
         function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
-            /* Sticky title scrolled down into bar zone: collapse + unstick so bar scrolls away */
-            if (expandedTitleRect && expandedTitleRect.bottom >= threshold) {
+            var unstickOffset = 8;
+            /* Sticky title scrolled down into bar zone: wait 8px more before unstick */
+            if (expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset) {
                 collapseAndUnstickBar($expanded, $next);
                 return;
             }
-            /* Next section title entering bar zone: collapse + unstick early so bar is still visible when it scrolls */
-            if (nextTitleRect && nextTitleRect.top <= threshold) {
+            /* Next section title entering bar zone: wait 8px more scroll before unstick */
+            if (nextTitleRect && nextTitleRect.top <= threshold - unstickOffset) {
                 collapseAndUnstickBar($expanded, $next);
                 return;
             }
@@ -124,6 +125,7 @@
             if (scrollCollapsedSectionId) {
                 var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
                 var threshold = viewportBottom - BAR_HEIGHT;
+                var unstickOffset = 8;
                 var $section = $('#' + scrollCollapsedSectionId);
                 var $nextForCollapsed = $section.next('[data-collection-section]');
                 if ($section.length) {
@@ -132,14 +134,14 @@
                         var $nextTitle = $nextForCollapsed.find('.collection-section-toggle').first();
                         if ($nextTitle.length) {
                             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-                            if (nextTitleRect.top > threshold) shouldReexpand = true;
+                            if (nextTitleRect.top > threshold - unstickOffset) shouldReexpand = true;
                         }
                     }
                     if (!shouldReexpand) {
                         var $sectionTitle = $section.find('.collection-section-toggle').first();
                         if ($sectionTitle.length) {
                             var sectionTitleRect = $sectionTitle[0].getBoundingClientRect();
-                            if (sectionTitleRect.bottom < threshold) shouldReexpand = true;
+                            if (sectionTitleRect.bottom < threshold + unstickOffset) shouldReexpand = true;
                         }
                     }
                     if (shouldReexpand) {
