@@ -64,17 +64,18 @@
             });
         }
 
-        var scrollCollapsedSectionId = null;
-
-        function collapseAndUnstickBar($expanded, $next) {
+        function unstickBarOnly($expanded, $next) {
             if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
             $bar.addClass('is-visible');
-            $expanded.removeClass('expanded');
-            $expanded.find('.collection-section-toggle').attr('aria-expanded', 'false');
-            scrollCollapsedSectionId = $expanded.attr('id');
-            /* Append to expanded section so bar stays on screen (right below section title) and scrolls down with it */
+            /* Append to expanded section so bar stays on screen and scrolls down; do NOT collapse section (avoids re-expand and jump) */
             $expanded.append($bar);
             $bar.addClass('collection-next-title-bar-unstuck');
+            if (barPollTimer) {
+                clearInterval(barPollTimer);
+                barPollTimer = null;
+            }
+            $(window).off('scroll.collectionNextBar resize.collectionNextBar');
+            $(document).off('scroll.collectionNextBar');
         }
 
         function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
@@ -83,74 +84,22 @@
             var unstickOffset = 8;
             /* Sticky title scrolled down into bar zone: wait before unstick */
             if (expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset) {
-                collapseAndUnstickBar($expanded, $next);
+                unstickBarOnly($expanded, $next);
                 return;
             }
             /* Next section title entering bar zone: wait before unstick */
             if (nextTitleRect && nextTitleRect.top <= threshold - unstickOffset) {
-                collapseAndUnstickBar($expanded, $next);
+                unstickBarOnly($expanded, $next);
                 return;
             }
             $bar.addClass('is-visible');
-        }
-
-        function reexpandFromScroll($section) {
-            if ($bar.parent()[0] !== document.body) {
-                $('body').append($bar);
-            }
-            $bar.removeClass('collection-next-title-bar-unstuck');
-            var $next = $section.next('[data-collection-section]');
-            $section.addClass('expanded');
-            $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
-            if ($next.length) {
-                var titleText = $next.find('.collection-section-toggle').first().text().trim();
-                $bar.text(titleText).data('section-id', $next.attr('id'));
-                $bar.off('click keydown').on('click', function () {
-                    expandSection($next.attr('id'));
-                }).on('keydown', function (e) {
-                    if (e.which === 13 || e.which === 32) {
-                        e.preventDefault();
-                        expandSection($next.attr('id'));
-                    }
-                });
-            }
-            scrollCollapsedSectionId = null;
-            updateBarVisibility();
         }
 
         function updateBarVisibility() {
             var $expanded = $('[data-collection-section].expanded');
             var $next = $expanded.next('[data-collection-section]');
 
-            if (scrollCollapsedSectionId) {
-                var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
-                var threshold = viewportBottom - BAR_HEIGHT;
-                var unstickOffset = 8;
-                var $section = $('#' + scrollCollapsedSectionId);
-                var $nextForCollapsed = $section.next('[data-collection-section]');
-                if ($section.length) {
-                    var shouldReexpand = false;
-                    if ($nextForCollapsed.length) {
-                        var $nextTitle = $nextForCollapsed.find('.collection-section-toggle').first();
-                        if ($nextTitle.length) {
-                            var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-                            if (nextTitleRect.top > threshold - unstickOffset) shouldReexpand = true;
-                        }
-                    }
-                    if (!shouldReexpand) {
-                        var $sectionTitle = $section.find('.collection-section-toggle').first();
-                        if ($sectionTitle.length) {
-                            var sectionTitleRect = $sectionTitle[0].getBoundingClientRect();
-                            /* Only re-expand when section title is visible and above bar (user scrolled back up), not when title is above viewport */
-                            if (sectionTitleRect.bottom > 0 && sectionTitleRect.bottom < threshold + unstickOffset) shouldReexpand = true;
-                        }
-                    }
-                    if (shouldReexpand) {
-                        reexpandFromScroll($section);
-                        return;
-                    }
-                }
-                /* Bar is unstuck and in flow; leave it visible so it can scroll down */
+            if ($bar.hasClass('collection-next-title-bar-unstuck')) {
                 return;
             }
 
@@ -179,7 +128,6 @@
             }
             $(window).off('scroll.collectionNextBar resize.collectionNextBar');
             $(document).off('scroll.collectionNextBar');
-            scrollCollapsedSectionId = null;
             $sections.removeClass('expanded');
             $toggles.attr('aria-expanded', 'false');
             if ($bar.parent()[0] !== document.body) {
