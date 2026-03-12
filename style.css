@@ -347,8 +347,8 @@ button:focus {
 .navbar.gray {
     height: 56px;
     box-sizing: border-box;
-    padding-top: 6px !important;
-    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+    padding-bottom: 6px !important;
     border-bottom: 2px solid #000 !important;
 }
 
@@ -648,7 +648,7 @@ a:link {
     top: 56px;
     z-index: 1020;
     box-sizing: border-box;
-    padding: 8px 16px;
+    padding: 10px 16px 6px;
     min-height: 44px;
     display: flex;
     align-items: center;
@@ -686,7 +686,7 @@ a:link {
     color: #FFA500;
     font-size: 36px;
     text-align: center;
-    padding: 8px 16px;
+    padding: 10px 16px 6px;
     min-height: 44px;
     box-sizing: border-box;
     align-items: center;
