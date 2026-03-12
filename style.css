@@ -605,20 +605,25 @@ a:link {
 /*::::::::::::::::::::::::::::::::::::
    Collection Sections (game pieces)
 ::::::::::::::::::::::::::::::::::::*/
+/* Uncouple backgrounds: section no fill; title bar = darker gray, body = lighter gray */
 .collection-section {
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: transparent !important;
 }
 .collection-section:not(.expanded) {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 /* Collapsed by default; only titles visible */
 .collection-section-body {
     display: none;
+    background-color: #343a40;
 }
 .collection-section.expanded .collection-section-body {
     display: block;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
 }
 .collection-section-title {
     color: #FFA500;
@@ -628,17 +633,18 @@ a:link {
     position: sticky;
     top: 56px;
     z-index: 1020;
-    padding: 12px 16px;
-    min-height: 52px;
+    padding: 8px 16px;
+    min-height: 44px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     user-select: none;
+    background-color: #222222;
 }
 .collection-section.expanded .collection-section-title {
-    margin-bottom: 2rem;
+    margin-bottom: 0;
 }
 /* Fixed bar at bottom showing next section title when a non-last category is expanded */
 .collection-next-title-bar {
@@ -651,8 +657,8 @@ a:link {
     color: #FFA500;
     font-size: 36px;
     text-align: center;
-    padding: 8px 0;
-    min-height: 52px;
+    padding: 8px 16px;
+    min-height: 44px;
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
@@ -663,14 +669,6 @@ a:link {
 }
 .collection-next-title-bar.is-visible {
     display: flex !important;
-}
-.collection-section.bg-dark .collection-section-title {
-    background-color: #343a40;
-    padding-top: 20px;
-    min-height: 64px;
-}
-.collection-section.bg-secondary .collection-section-title {
-    background-color: #222222;
 }
 .collection-list {
     display: flex;
