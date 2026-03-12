@@ -77,13 +77,18 @@
                 $expanded.removeClass('expanded');
                 $expanded.find('.collection-section-toggle').attr('aria-expanded', 'false');
                 scrollCollapsedSectionId = $expanded.attr('id');
-                $bar.removeClass('is-visible');
+                $next.before($bar);
+                $bar.addClass('collection-next-title-bar-unstuck');
                 return;
             }
             $bar.addClass('is-visible');
         }
 
         function reexpandFromScroll($section) {
+            if ($bar.parent()[0] !== document.body) {
+                $('body').append($bar);
+            }
+            $bar.removeClass('collection-next-title-bar-unstuck');
             var $next = $section.next('[data-collection-section]');
             $section.addClass('expanded');
             $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
@@ -154,7 +159,10 @@
             scrollCollapsedSectionId = null;
             $sections.removeClass('expanded');
             $toggles.attr('aria-expanded', 'false');
-            $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
+            if ($bar.parent()[0] !== document.body) {
+                $('body').append($bar);
+            }
+            $bar.removeClass('is-visible collection-next-title-bar-unstuck').removeData('section-id').off('click keydown');
             if (wasExpanded) return;
             $section.addClass('expanded');
             $section.find('.collection-section-toggle').attr('aria-expanded', 'true');

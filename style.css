@@ -706,6 +706,13 @@ a:link {
 .collection-next-title-bar.is-visible {
     display: flex !important;
 }
+/* In-flow so bar scrolls down off screen when section is scroll-collapsed */
+.collection-next-title-bar-unstuck {
+    position: static !important;
+    display: flex !important;
+    width: 100%;
+    pointer-events: none;
+}
 .collection-list {
     display: flex;
     flex-direction: column;
