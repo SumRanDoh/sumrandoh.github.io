@@ -141,7 +141,8 @@
                         var $sectionTitle = $section.find('.collection-section-toggle').first();
                         if ($sectionTitle.length) {
                             var sectionTitleRect = $sectionTitle[0].getBoundingClientRect();
-                            if (sectionTitleRect.bottom < threshold + unstickOffset) shouldReexpand = true;
+                            /* Only re-expand when section title is visible and above bar (user scrolled back up), not when title is above viewport */
+                            if (sectionTitleRect.bottom > 0 && sectionTitleRect.bottom < threshold + unstickOffset) shouldReexpand = true;
                         }
                     }
                     if (shouldReexpand) {
