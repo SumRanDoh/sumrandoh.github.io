@@ -638,6 +638,10 @@ a:link {
     padding-top: 1.5rem;
     padding-bottom: 2rem;
 }
+/* Extra 2px below expanded section so sticky title holds 2px more scroll before next title pushes it up */
+.collection-section.expanded {
+    margin-bottom: 2px;
+}
 /* Sticky title stays in flow (so sticky works); full-width bar via ::before */
 .collection-section-title {
     position: sticky;
