@@ -66,19 +66,26 @@
 
         var scrollCollapsedSectionId = null;
 
+        function collapseAndUnstickBar($expanded, $next) {
+            if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
+            $expanded.removeClass('expanded');
+            $expanded.find('.collection-section-toggle').attr('aria-expanded', 'false');
+            scrollCollapsedSectionId = $expanded.attr('id');
+            $next.before($bar);
+            $bar.addClass('collection-next-title-bar-unstuck');
+        }
+
         function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
+            /* Sticky title scrolled down into bar zone: collapse + unstick so bar scrolls away */
             if (expandedTitleRect && expandedTitleRect.bottom >= threshold) {
-                $bar.removeClass('is-visible');
+                collapseAndUnstickBar($expanded, $next);
                 return;
             }
+            /* Next section title swept up into bar: collapse + unstick so bar scrolls away */
             if (nextTitleRect && nextTitleRect.bottom <= threshold) {
-                $expanded.removeClass('expanded');
-                $expanded.find('.collection-section-toggle').attr('aria-expanded', 'false');
-                scrollCollapsedSectionId = $expanded.attr('id');
-                $next.before($bar);
-                $bar.addClass('collection-next-title-bar-unstuck');
+                collapseAndUnstickBar($expanded, $next);
                 return;
             }
             $bar.addClass('is-visible');
@@ -113,18 +120,29 @@
             var $next = $expanded.next('[data-collection-section]');
 
             if (scrollCollapsedSectionId) {
+                var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
+                var threshold = viewportBottom - BAR_HEIGHT;
                 var $section = $('#' + scrollCollapsedSectionId);
                 var $nextForCollapsed = $section.next('[data-collection-section]');
-                if ($section.length && $nextForCollapsed.length) {
-                    var $nextTitle = $nextForCollapsed.find('.collection-section-toggle').first();
-                    if ($nextTitle.length) {
-                        var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-                        var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
-                        var threshold = viewportBottom - BAR_HEIGHT;
-                        if (nextTitleRect.bottom > threshold) {
-                            reexpandFromScroll($section);
-                            return;
+                if ($section.length) {
+                    var shouldReexpand = false;
+                    if ($nextForCollapsed.length) {
+                        var $nextTitle = $nextForCollapsed.find('.collection-section-toggle').first();
+                        if ($nextTitle.length) {
+                            var nextTitleRect = $nextTitle[0].getBoundingClientRect();
+                            if (nextTitleRect.bottom > threshold) shouldReexpand = true;
                         }
+                    }
+                    if (!shouldReexpand) {
+                        var $sectionTitle = $section.find('.collection-section-toggle').first();
+                        if ($sectionTitle.length) {
+                            var sectionTitleRect = $sectionTitle[0].getBoundingClientRect();
+                            if (sectionTitleRect.bottom < threshold) shouldReexpand = true;
+                        }
+                    }
+                    if (shouldReexpand) {
+                        reexpandFromScroll($section);
+                        return;
                     }
                 }
                 /* Bar is unstuck and in flow; leave it visible so it can scroll down */
