@@ -68,10 +68,12 @@
 
         function collapseAndUnstickBar($expanded, $next) {
             if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
+            $bar.addClass('is-visible');
             $expanded.removeClass('expanded');
             $expanded.find('.collection-section-toggle').attr('aria-expanded', 'false');
             scrollCollapsedSectionId = $expanded.attr('id');
-            $next.before($bar);
+            /* Append to expanded section so bar stays on screen (right below section title) and scrolls down with it */
+            $expanded.append($bar);
             $bar.addClass('collection-next-title-bar-unstuck');
         }
 
@@ -83,8 +85,8 @@
                 collapseAndUnstickBar($expanded, $next);
                 return;
             }
-            /* Next section title swept up into bar: collapse + unstick so bar scrolls away */
-            if (nextTitleRect && nextTitleRect.bottom <= threshold) {
+            /* Next section title entering bar zone: collapse + unstick early so bar is still visible when it scrolls */
+            if (nextTitleRect && nextTitleRect.top <= threshold) {
                 collapseAndUnstickBar($expanded, $next);
                 return;
             }
@@ -130,7 +132,7 @@
                         var $nextTitle = $nextForCollapsed.find('.collection-section-toggle').first();
                         if ($nextTitle.length) {
                             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-                            if (nextTitleRect.bottom > threshold) shouldReexpand = true;
+                            if (nextTitleRect.top > threshold) shouldReexpand = true;
                         }
                     }
                     if (!shouldReexpand) {
@@ -200,7 +202,7 @@
                 $(window).on('scroll.collectionNextBar', scheduleBarUpdate);
                 $(document).on('scroll.collectionNextBar', scheduleBarUpdate);
                 $(window).on('resize.collectionNextBar', scheduleBarUpdate);
-                barPollTimer = setInterval(updateBarVisibility, 120);
+                barPollTimer = setInterval(updateBarVisibility, 50);
                 updateBarVisibility();
             }
             var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
