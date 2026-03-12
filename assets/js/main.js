@@ -57,6 +57,7 @@
         var barPollTimer = null;
         var barRafId = null;
         var lastUnstickTime = 0;
+        var lastRestickTime = 0;
         var RESTICK_COOLDOWN_MS = 400;
 
         /* Debug: log title-label positions when ?debug=1; download with Cmd/Ctrl+Shift+L or the "Download position log" button */
@@ -159,13 +160,15 @@
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
             var unstickOffset = 8;
-            /* Sticky title scrolled down into bar zone: wait before unstick */
-            if (expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset) {
+            var now = Date.now();
+            var afterRestickCooldown = (now - lastRestickTime) >= RESTICK_COOLDOWN_MS;
+            /* Sticky title scrolled down into bar zone: wait before unstick (and don't unstick right after restick) */
+            if (afterRestickCooldown && expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset) {
                 unstickBarOnly($expanded, $next);
                 return;
             }
             /* Next section title entering bar zone: unstick only when well past threshold (hysteresis avoids flip-flop with restick) */
-            if (nextTitleRect && nextTitleRect.top <= threshold - unstickOffset - RESTICK_HYSTERESIS) {
+            if (afterRestickCooldown && nextTitleRect && nextTitleRect.top <= threshold - unstickOffset - RESTICK_HYSTERESIS) {
                 unstickBarOnly($expanded, $next);
                 return;
             }
@@ -193,6 +196,7 @@
                     if (barRect.bottom >= vh - 10 && (now - lastUnstickTime) >= RESTICK_COOLDOWN_MS) {
                         $('body').append($bar);
                         $bar.removeClass('collection-next-title-bar-unstuck');
+                        lastRestickTime = now;
                         capturePositionSnapshot({ action: 'barShow' });
                         $bar.addClass('is-visible');
                         capturePositionSnapshot({ action: 'restick' });
