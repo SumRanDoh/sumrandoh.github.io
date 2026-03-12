@@ -808,7 +808,7 @@ def generate_collection_html(data: dict) -> str:
         </div>
     </section>''')
 
-    return "\n\n".join(sections)
+    return '<div class="collection-sections-wrapper">\n\n' + "\n\n".join(sections) + '\n    </div>'
 
 
 def update_index_html(data: dict):
