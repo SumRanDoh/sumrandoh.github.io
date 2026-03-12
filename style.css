@@ -339,8 +339,9 @@ button:focus {
     background-color: #222222;
 }
 
-.header {
-    border-bottom: 2px solid #000;
+.header .navbar,
+.navbar.gray {
+    border-bottom: 2px solid #000 !important;
 }
 
 /* Prismatics dropdown: show on hover (desktop only) */
@@ -661,6 +662,10 @@ a:link {
     box-sizing: border-box;
     z-index: -1;
     pointer-events: none;
+}
+/* Collapsed title bars: no bottom border so stacked bars don't double up */
+.collection-section:not(.expanded) .collection-section-title::before {
+    border-bottom-width: 0;
 }
 /* Fixed bar at bottom showing next section title when a non-last category is expanded */
 .collection-next-title-bar {
