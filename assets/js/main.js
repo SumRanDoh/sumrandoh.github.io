@@ -56,6 +56,8 @@
         var BAR_HEIGHT = 64;
         var barPollTimer = null;
         var barRafId = null;
+        var lastUnstickTime = 0;
+        var RESTICK_COOLDOWN_MS = 400;
 
         /* Debug: log title-label positions when ?debug=1; download with Cmd/Ctrl+Shift+L or the "Download position log" button */
         var positionLog = [];
@@ -144,11 +146,13 @@
             });
             $bar.addClass('is-visible');
             /* Append to expanded section so bar stays on screen and scrolls down; do NOT collapse section (avoids re-expand and jump) */
+            lastUnstickTime = Date.now();
             $expanded.append($bar);
             $bar.addClass('collection-next-title-bar-unstuck');
             /* Keep poll and scroll handlers so we can restick when user scrolls back up */
         }
 
+        var RESTICK_HYSTERESIS = 50; /* px: avoid unstick/restick flip-flop; only unstick when next title is well into viewport */
         function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
             var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
             var threshold = viewportBottom - BAR_HEIGHT;
@@ -158,9 +162,14 @@
                 unstickBarOnly($expanded, $next);
                 return;
             }
-            /* Next section title entering bar zone: wait before unstick */
-            if (nextTitleRect && nextTitleRect.top <= threshold - unstickOffset) {
+            /* Next section title entering bar zone: unstick only when well past threshold (hysteresis avoids flip-flop with restick) */
+            if (nextTitleRect && nextTitleRect.top <= threshold - unstickOffset - RESTICK_HYSTERESIS) {
                 unstickBarOnly($expanded, $next);
+                return;
+            }
+            /* Don't show bar when next section title is already on screen (avoids two identical labels) */
+            if (nextTitleRect && nextTitleRect.top < viewportBottom - 30) {
+                $bar.removeClass('is-visible');
                 return;
             }
             $bar.addClass('is-visible');
@@ -175,8 +184,9 @@
                 if (barEl && barEl.getBoundingClientRect) {
                     var barRect = barEl.getBoundingClientRect();
                     var vh = window.innerHeight || document.documentElement.clientHeight;
-                    /* Restick when bar (in flow) has scrolled back to the bottom of the viewport */
-                    if (barRect.bottom >= vh - 10) {
+                    var now = Date.now();
+                    /* Restick when bar (in flow) is at bottom and cooldown passed (avoids unstick/restick flashing) */
+                    if (barRect.bottom >= vh - 10 && (now - lastUnstickTime) >= RESTICK_COOLDOWN_MS) {
                         $('body').append($bar);
                         $bar.removeClass('collection-next-title-bar-unstuck');
                         $bar.addClass('is-visible');
