@@ -71,7 +71,8 @@
                 $bar.removeClass('is-visible');
                 return;
             }
-            if (nextTitleRect && nextTitleRect.top <= threshold) {
+            /* Hide only when next title has swept up into the bar (bottom edge at bar top), not when it first enters zone */
+            if (nextTitleRect && nextTitleRect.bottom <= threshold) {
                 $bar.removeClass('is-visible');
                 return;
             }
