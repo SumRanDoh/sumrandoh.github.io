@@ -127,7 +127,7 @@
                         }
                     }
                 }
-                $bar.removeClass('is-visible');
+                /* Bar is unstuck and in flow; leave it visible so it can scroll down */
                 return;
             }
 
