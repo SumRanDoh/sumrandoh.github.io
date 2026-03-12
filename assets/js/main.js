@@ -75,7 +75,7 @@
             var now = Date.now();
             var action = opts && opts.action;
             if (action) {
-                if (action === 'unstick' || action === 'restick') { /* always log */ }
+                if (action === 'unstick' || action === 'restick' || action === 'barHide' || action === 'barShow') { /* always log */ }
                 else if (action === lastLogAction && now - lastLogTime < positionLogActionThrottleMs) return;
             } else if (now - lastLogTime < positionLogThrottleMs) return;
             lastLogTime = now;
@@ -144,11 +144,13 @@
                 topStickyTitle: $et.length ? rectToObj($et[0].getBoundingClientRect()) : null,
                 nextSectionTitle: $nt.length ? rectToObj($nt[0].getBoundingClientRect()) : null
             });
+            capturePositionSnapshot({ action: 'barShow' });
             $bar.addClass('is-visible');
             /* Append to expanded section so bar stays on screen and scrolls down; do NOT collapse section (avoids re-expand and jump) */
             lastUnstickTime = Date.now();
             $expanded.append($bar);
             $bar.addClass('collection-next-title-bar-unstuck');
+            capturePositionSnapshot({ action: 'barHide' }); /* bar is now in-flow and invisible */
             /* Keep poll and scroll handlers so we can restick when user scrolls back up */
         }
 
@@ -169,9 +171,11 @@
             }
             /* Don't show bar when next section title is already on screen (avoids two identical labels) */
             if (nextTitleRect && nextTitleRect.top < viewportBottom - 30) {
+                capturePositionSnapshot({ action: 'barHide' });
                 $bar.removeClass('is-visible');
                 return;
             }
+            capturePositionSnapshot({ action: 'barShow' });
             $bar.addClass('is-visible');
         }
 
@@ -189,6 +193,7 @@
                     if (barRect.bottom >= vh - 10 && (now - lastUnstickTime) >= RESTICK_COOLDOWN_MS) {
                         $('body').append($bar);
                         $bar.removeClass('collection-next-title-bar-unstuck');
+                        capturePositionSnapshot({ action: 'barShow' });
                         $bar.addClass('is-visible');
                         capturePositionSnapshot({ action: 'restick' });
                         return;
@@ -200,12 +205,14 @@
 
             if (!$expanded.length || !$next.length) {
                 capturePositionSnapshot({ action: 'barHidden', expandedId: $expanded.length ? $expanded.attr('id') : null, nextId: $next.length ? $next.attr('id') : null });
+                capturePositionSnapshot({ action: 'barHide' });
                 $bar.removeClass('is-visible');
                 return;
             }
             var $expandedTitle = $expanded.find('.collection-section-toggle').first();
             var $nextTitle = $next.find('.collection-section-toggle').first();
             if (!$expandedTitle.length || !$nextTitle.length) {
+                capturePositionSnapshot({ action: 'barShow' });
                 $bar.addClass('is-visible');
                 return;
             }

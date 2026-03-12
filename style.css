@@ -706,7 +706,7 @@ a:link {
 .collection-next-title-bar.is-visible {
     display: flex !important;
 }
-/* In-flow so bar scrolls down off screen when section is scroll-collapsed */
+/* In-flow so bar scrolls down off screen when section is scroll-collapsed; invisible to avoid duplicate label above real section title */
 .collection-next-title-bar-unstuck {
     position: static !important;
     display: flex !important;
@@ -714,6 +714,7 @@ a:link {
     margin-left: calc(50% - 50vw);
     box-sizing: border-box;
     pointer-events: none;
+    visibility: hidden;
 }
 .collection-list {
     display: flex;
