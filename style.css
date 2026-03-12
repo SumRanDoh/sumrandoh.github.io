@@ -606,11 +606,13 @@ a:link {
    Collection Sections (game pieces)
 ::::::::::::::::::::::::::::::::::::*/
 /* Uncouple backgrounds: section no fill; title bar = darker gray, body = lighter gray */
+.collection-sections-wrapper {
+    overflow-x: hidden;
+}
 .collection-section {
     padding-top: 0;
     padding-bottom: 0;
     background-color: transparent !important;
-    overflow-x: hidden;
 }
 .collection-section:not(.expanded) {
     padding-top: 0;
