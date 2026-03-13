@@ -170,21 +170,11 @@
             var unstickOffset = 8;
             var now = Date.now();
             var afterRestickCooldown = (now - lastRestickTime) >= RESTICK_COOLDOWN_MS;
-            /* Sticky title in bar zone: unstick so bottom label sweeps away; during cooldown only hide after grace period (avoid restick→immediate hide) */
+            /* Sticky title in bar zone: unstick so bottom label sweeps away. During cooldown do not hide – keep bar visible to avoid flash. */
             var stickyInZone = expandedTitleRect && expandedTitleRect.bottom >= threshold;
-            var stickyWellInZone = expandedTitleRect && expandedTitleRect.bottom >= threshold + 10;
-            var restickGraceMs = 250;
-            var afterRestickGrace = (now - lastRestickTime) >= restickGraceMs;
-            if (stickyInZone) {
-                if (afterRestickCooldown) {
-                    unstickBarOnly($expanded, $next);
-                    return;
-                }
-                if (stickyWellInZone && afterRestickGrace) {
-                    if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
-                    $bar.removeClass('is-visible');
-                    return;
-                }
+            if (stickyInZone && afterRestickCooldown) {
+                unstickBarOnly($expanded, $next);
+                return;
             }
             /* Next section title entering bar zone: unstick only when well past threshold (hysteresis avoids flip-flop with restick) */
             if (afterRestickCooldown && nextTitleRect && nextTitleRect.top <= threshold - unstickOffset - RESTICK_HYSTERESIS) {
