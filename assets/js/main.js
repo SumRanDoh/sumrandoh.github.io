@@ -42,7 +42,7 @@
 
     /*:::::::::::::::::::::::::::::::::::
        Collection sections: collapsed by default, click title to expand
-       Next section title fixed to bottom; unstick when top title scrolls down to it or next title scrolls up into view
+       Next section title fixed to bottom; hide when top sticky enters bar zone or next section title is on screen
     ::::::::::::::::::::::::::::::::::::*/
     $(function () {
         var $sections = $('[data-collection-section]');
@@ -56,9 +56,8 @@
         var BAR_HEIGHT = 64;
         var barPollTimer = null;
         var barRafId = null;
-        var lastUnstickTime = 0;
-        var lastRestickTime = 0;
-        var RESTICK_COOLDOWN_MS = 400;
+        /* Hysteresis (px) so we don't flip show/hide at exact boundary */
+        var BAR_HYSTERESIS = 6;
 
         /* Debug: log title-label positions when ?debug=1; download with Cmd/Ctrl+Shift+L or the "Download position log" button */
         var positionLog = [];
@@ -91,11 +90,9 @@
                 t: now,
                 scrollY: window.pageYOffset || document.documentElement.scrollTop,
                 viewportHeight: vh,
-                /* Reference: top sticky should sit at stickyTopPx; bar zone starts at barZoneTop */
                 stickyTopPx: 54,
                 barZoneTop: vh - BAR_HEIGHT,
                 barVisible: $bar.hasClass('is-visible'),
-                barUnstuck: $bar.hasClass('collection-next-title-bar-unstuck'),
                 barParent: barEl && barEl.parentNode ? (barEl.parentNode.id || barEl.parentNode.className || barEl.parentNode.tagName) : null,
                 /* Title label positions (focus of log) */
                 topStickyTitle: opts && opts.topStickyTitle ? opts.topStickyTitle : null,
@@ -142,47 +139,15 @@
             });
         }
 
-        function unstickBarOnly($expanded, $next) {
-            if ($bar.hasClass('collection-next-title-bar-unstuck')) return;
-            var $et = $expanded.find('.collection-section-toggle').first();
-            var $nt = $next.find('.collection-section-toggle').first();
-            capturePositionSnapshot({
-                action: 'unstick',
-                expandedId: $expanded.attr('id'),
-                nextId: $next.attr('id'),
-                topStickyTitle: $et.length ? rectToObj($et[0].getBoundingClientRect()) : null,
-                nextSectionTitle: $nt.length ? rectToObj($nt[0].getBoundingClientRect()) : null
-            });
-            capturePositionSnapshot({ action: 'barShow' });
-            $bar.addClass('is-visible');
-            /* Append to expanded section so bar stays on screen and scrolls down; do NOT collapse section (avoids re-expand and jump) */
-            lastUnstickTime = Date.now();
-            $expanded.append($bar);
-            $bar.addClass('collection-next-title-bar-unstuck');
-            capturePositionSnapshot({ action: 'barHide' }); /* bar is now in-flow and invisible */
-            /* Keep poll and scroll handlers so we can restick when user scrolls back up */
-        }
-
-        var RESTICK_HYSTERESIS = 50; /* px: avoid unstick/restick flip-flop; only unstick when next title is well into viewport */
-        function updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next) {
-            var viewportBottom = window.innerHeight || document.documentElement.clientHeight;
-            var threshold = viewportBottom - BAR_HEIGHT;
-            var unstickOffset = 8;
-            var now = Date.now();
-            var afterRestickCooldown = (now - lastRestickTime) >= RESTICK_COOLDOWN_MS;
-            /* Sticky title in bar zone: unstick so bottom label sweeps away. During cooldown do not hide – keep bar visible to avoid flash. */
-            var stickyInZone = expandedTitleRect && expandedTitleRect.bottom >= threshold;
-            if (stickyInZone && afterRestickCooldown) {
-                unstickBarOnly($expanded, $next);
-                return;
-            }
-            /* Next section title entering bar zone: unstick only when well past threshold (hysteresis avoids flip-flop with restick) */
-            if (afterRestickCooldown && nextTitleRect && nextTitleRect.top <= threshold - unstickOffset - RESTICK_HYSTERESIS) {
-                unstickBarOnly($expanded, $next);
-                return;
-            }
-            /* Don't show bar when next section title is already on screen (avoids two identical labels); wait a bit after restick to avoid restick-then-immediate-hide flash */
-            if (nextTitleRect && nextTitleRect.top < viewportBottom - 30 && (now - lastRestickTime) >= 300) {
+        /* Bar is always fixed at bottom; we only show/hide based on scroll position. No DOM moves, no timers. */
+        function updateBarFromRects(expandedTitleRect, nextTitleRect) {
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            var barZoneTop = vh - BAR_HEIGHT;
+            /* Hide when top sticky has scrolled into bar zone (hysteresis avoids boundary flicker) */
+            var stickyInZone = expandedTitleRect && expandedTitleRect.bottom >= barZoneTop + BAR_HYSTERESIS;
+            /* Hide when next section title is on screen (avoid duplicate label) */
+            var nextOnScreen = nextTitleRect && nextTitleRect.top < vh - 30;
+            if (stickyInZone || nextOnScreen) {
                 if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
                 $bar.removeClass('is-visible');
                 return;
@@ -195,29 +160,8 @@
             var $expanded = $('[data-collection-section].expanded');
             var $next = $expanded.next('[data-collection-section]');
 
-            if ($bar.hasClass('collection-next-title-bar-unstuck')) {
-                var barEl = $bar[0];
-                if (barEl && barEl.getBoundingClientRect) {
-                    var barRect = barEl.getBoundingClientRect();
-                    var vh = window.innerHeight || document.documentElement.clientHeight;
-                    var now = Date.now();
-                    /* Restick when bar (in flow) is at bottom and cooldown passed (avoids unstick/restick flashing) */
-                    if (barRect.bottom >= vh - 10 && (now - lastUnstickTime) >= RESTICK_COOLDOWN_MS) {
-                        $('body').append($bar);
-                        $bar.removeClass('collection-next-title-bar-unstuck');
-                        lastRestickTime = now;
-                        capturePositionSnapshot({ action: 'barShow' });
-                        $bar.addClass('is-visible');
-                        capturePositionSnapshot({ action: 'restick' });
-                        return;
-                    }
-                }
-                capturePositionSnapshot({ action: 'barUnstuck' });
-                return;
-            }
-
             if (!$expanded.length || !$next.length) {
-                capturePositionSnapshot({ action: 'barHidden', expandedId: $expanded.length ? $expanded.attr('id') : null, nextId: $next.length ? $next.attr('id') : null });
+                if (debugMode) capturePositionSnapshot({ action: 'barHidden', expandedId: $expanded.length ? $expanded.attr('id') : null, nextId: $next.length ? $next.attr('id') : null });
                 if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
                 $bar.removeClass('is-visible');
                 return;
@@ -231,13 +175,15 @@
             }
             var expandedTitleRect = $expandedTitle[0].getBoundingClientRect();
             var nextTitleRect = $nextTitle[0].getBoundingClientRect();
-            capturePositionSnapshot({
-                expandedId: $expanded.attr('id'),
-                nextId: $next.attr('id'),
-                topStickyTitle: rectToObj(expandedTitleRect),
-                nextSectionTitle: rectToObj(nextTitleRect)
-            });
-            updateBarFromRects(expandedTitleRect, nextTitleRect, $expanded, $next);
+            if (debugMode) {
+                capturePositionSnapshot({
+                    expandedId: $expanded.attr('id'),
+                    nextId: $next.attr('id'),
+                    topStickyTitle: rectToObj(expandedTitleRect),
+                    nextSectionTitle: rectToObj(nextTitleRect)
+                });
+            }
+            updateBarFromRects(expandedTitleRect, nextTitleRect);
         }
 
         function expandSection(sectionId) {
@@ -255,7 +201,7 @@
             if ($bar.parent()[0] !== document.body) {
                 $('body').append($bar);
             }
-            $bar.removeClass('is-visible collection-next-title-bar-unstuck').removeData('section-id').off('click keydown');
+            $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
             if (wasExpanded) return;
             $section.addClass('expanded');
             $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
