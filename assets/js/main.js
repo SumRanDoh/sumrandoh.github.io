@@ -180,6 +180,12 @@
                 unstickBarOnly($expanded, $next);
                 return;
             }
+            /* When sticky title is in bar zone (even during cooldown), hide bar so we don't show two labels overlapping – avoids flash at scrollY ~3150 */
+            if (expandedTitleRect && expandedTitleRect.bottom >= threshold) {
+                if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
+                $bar.removeClass('is-visible');
+                return;
+            }
             /* Don't show bar when next section title is already on screen (avoids two identical labels); wait a bit after restick to avoid restick-then-immediate-hide flash */
             if (nextTitleRect && nextTitleRect.top < viewportBottom - 30 && (now - lastRestickTime) >= 300) {
                 if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
