@@ -127,6 +127,8 @@ def _parse_gd_format_args(array_str: str) -> list:
             values.append(10)
         elif "n + 1" in p or "n+1" in p:
             values.append(2)  # n+1 for n=1
+        elif "copy" in p and "copies" in p:
+            values.append("copy")  # ('copy' if actual.n == 1 else 'copies') for n=1; check before actual.n
         elif "actual.n" in p or (re.match(r"^\s*n\s*[,\]\)]", p) or p.strip() == "n"):
             values.append(1)
         elif "adjusted" in p:
@@ -143,8 +145,6 @@ def _parse_gd_format_args(array_str: str) -> list:
             values.append(PALETTE_HEX["legendary"])
         elif "copied.variant" in p or "set_rules" in p:
             values.append("—")  # placeholder for copy workers; use fallback
-        elif "copy" in p and "copies" in p:
-            values.append("copy")  # ('copy' if actual.n == 1 else 'copies') for n=1
         else:
             values.append(1)  # default for %d / %0.0f
     return values

@@ -306,7 +306,7 @@
     {
       "title": "Accountant",
       "rarity": "common",
-      "rules": "Upon entering the store, gain 10% interest on held money\n+10% for every <span style=\"color:#25bf17\">version</span> beyond 1.0",
+      "rules": "Upon entering the store, gain 10% interest on held <span style=\"color:#ffd147\">\u26a1</span>\n+10% for every <span style=\"color:#25bf17\">version</span> beyond 1.0",
       "image": "assets/images/collection/workers/accountant.png"
     },
     {
@@ -612,7 +612,7 @@
     {
       "title": "Replication Developer",
       "rarity": "legendary",
-      "rules": "Can embed a component from your hand\n\nUpon entering the store, add <span style=\"color:#25bf17\">1</span> 1 of the embedded component to your deck",
+      "rules": "Can embed a component from your hand\n\nUpon entering the store, add <span style=\"color:#25bf17\">1</span> copy of the embedded component to your deck",
       "image": "assets/images/collection/workers/replication_developer.png"
     },
     {
