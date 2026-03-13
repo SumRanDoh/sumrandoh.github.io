@@ -172,13 +172,13 @@
                 unstickBarOnly($expanded, $next);
                 return;
             }
-            /* Don't show bar when next section title is already on screen (avoids two identical labels) */
-            if (nextTitleRect && nextTitleRect.top < viewportBottom - 30) {
-                capturePositionSnapshot({ action: 'barHide' });
+            /* Don't show bar when next section title is already on screen (avoids two identical labels); wait a bit after restick to avoid restick-then-immediate-hide flash */
+            if (nextTitleRect && nextTitleRect.top < viewportBottom - 30 && (now - lastRestickTime) >= 300) {
+                if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
                 $bar.removeClass('is-visible');
                 return;
             }
-            capturePositionSnapshot({ action: 'barShow' });
+            if (!$bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barShow' });
             $bar.addClass('is-visible');
         }
 
@@ -209,14 +209,14 @@
 
             if (!$expanded.length || !$next.length) {
                 capturePositionSnapshot({ action: 'barHidden', expandedId: $expanded.length ? $expanded.attr('id') : null, nextId: $next.length ? $next.attr('id') : null });
-                capturePositionSnapshot({ action: 'barHide' });
+                if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
                 $bar.removeClass('is-visible');
                 return;
             }
             var $expandedTitle = $expanded.find('.collection-section-toggle').first();
             var $nextTitle = $next.find('.collection-section-toggle').first();
             if (!$expandedTitle.length || !$nextTitle.length) {
-                capturePositionSnapshot({ action: 'barShow' });
+                if (!$bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barShow' });
                 $bar.addClass('is-visible');
                 return;
             }
