@@ -202,7 +202,11 @@
                 $('body').append($bar);
             }
             $bar.removeClass('is-visible').removeData('section-id').off('click keydown');
-            if (wasExpanded) return;
+            if (wasExpanded) {
+                var offset = ($('.navbar').length) ? $('.navbar').outerHeight() + 8 : 0;
+                $('html, body').scrollTop(Math.max(0, $section.offset().top - offset));
+                return;
+            }
             $section.addClass('expanded');
             $section.find('.collection-section-toggle').attr('aria-expanded', 'true');
             var $next = $section.next('[data-collection-section]');
