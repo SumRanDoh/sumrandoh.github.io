@@ -66,6 +66,7 @@
         var lastLogTime = 0;
         var lastLogAction = null;
         var positionLogThrottleMs = 40;
+        var positionLogThrottleWhenBarVisibleMs = 16;
         var positionLogActionThrottleMs = 200;
         var debugMode = typeof window !== 'undefined' && /[?&]debug=1/.test(window.location.search);
         function rectToObj(r) {
@@ -78,7 +79,10 @@
             if (action) {
                 if (action === 'unstick' || action === 'restick' || action === 'barHide' || action === 'barShow') { /* always log */ }
                 else if (action === lastLogAction && now - lastLogTime < positionLogActionThrottleMs) return;
-            } else if (now - lastLogTime < positionLogThrottleMs) return;
+            } else {
+                var throttleMs = $bar.hasClass('is-visible') ? positionLogThrottleWhenBarVisibleMs : positionLogThrottleMs;
+                if (now - lastLogTime < throttleMs) return;
+            }
             lastLogTime = now;
             lastLogAction = action || null;
             var vh = window.innerHeight || document.documentElement.clientHeight;
@@ -90,6 +94,7 @@
                 /* Reference: top sticky should sit at stickyTopPx; bar zone starts at barZoneTop */
                 stickyTopPx: 54,
                 barZoneTop: vh - BAR_HEIGHT,
+                barVisible: $bar.hasClass('is-visible'),
                 barUnstuck: $bar.hasClass('collection-next-title-bar-unstuck'),
                 barParent: barEl && barEl.parentNode ? (barEl.parentNode.id || barEl.parentNode.className || barEl.parentNode.tagName) : null,
                 /* Title label positions (focus of log) */
@@ -104,6 +109,9 @@
             if (opts) Object.keys(opts).forEach(function (k) {
                 if (k !== 'topStickyTitle' && k !== 'nextSectionTitle') entry[k] = opts[k];
             });
+            if (positionLog.length && positionLog[positionLog.length - 1].barVisible !== entry.barVisible) {
+                entry.visibilityToggled = true;
+            }
             positionLog.push(entry);
             if (positionLog.length > positionLogMax) positionLog.shift();
         }
