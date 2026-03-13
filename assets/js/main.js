@@ -170,20 +170,23 @@
             var unstickOffset = 8;
             var now = Date.now();
             var afterRestickCooldown = (now - lastRestickTime) >= RESTICK_COOLDOWN_MS;
-            /* Sticky title scrolled down into bar zone: wait before unstick (and don't unstick right after restick) */
-            if (afterRestickCooldown && expandedTitleRect && expandedTitleRect.bottom >= threshold + unstickOffset) {
-                unstickBarOnly($expanded, $next);
-                return;
+            /* Sticky title in bar zone: unstick so bottom label sweeps away; during cooldown only hide (with hysteresis to avoid flash) */
+            var stickyInZone = expandedTitleRect && expandedTitleRect.bottom >= threshold;
+            var stickyWellInZone = expandedTitleRect && expandedTitleRect.bottom >= threshold + 10;
+            if (stickyInZone) {
+                if (afterRestickCooldown) {
+                    unstickBarOnly($expanded, $next);
+                    return;
+                }
+                if (stickyWellInZone) {
+                    if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
+                    $bar.removeClass('is-visible');
+                    return;
+                }
             }
             /* Next section title entering bar zone: unstick only when well past threshold (hysteresis avoids flip-flop with restick) */
             if (afterRestickCooldown && nextTitleRect && nextTitleRect.top <= threshold - unstickOffset - RESTICK_HYSTERESIS) {
                 unstickBarOnly($expanded, $next);
-                return;
-            }
-            /* When sticky title is in bar zone (even during cooldown), hide bar so we don't show two labels overlapping – avoids flash at scrollY ~3150 */
-            if (expandedTitleRect && expandedTitleRect.bottom >= threshold) {
-                if ($bar.hasClass('is-visible')) capturePositionSnapshot({ action: 'barHide' });
-                $bar.removeClass('is-visible');
                 return;
             }
             /* Don't show bar when next section title is already on screen (avoids two identical labels); wait a bit after restick to avoid restick-then-immediate-hide flash */
