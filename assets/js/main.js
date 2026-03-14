@@ -53,20 +53,6 @@
             $('body').append($bar);
         }
 
-        /* Pin bar to visual viewport bottom on mobile (iOS Chrome/Safari: fixed is relative to layout viewport, so when browser UI hides the bar would stick too high) */
-        function pinBarToVisualBottom() {
-            var vv = window.visualViewport;
-            if (!vv) return;
-            var layoutH = document.documentElement.clientHeight;
-            var bottomPx = layoutH - vv.offsetTop - vv.height;
-            $bar.css('bottom', bottomPx + 'px');
-        }
-        if (typeof window.visualViewport !== 'undefined') {
-            window.visualViewport.addEventListener('resize', pinBarToVisualBottom);
-            window.visualViewport.addEventListener('scroll', pinBarToVisualBottom);
-            pinBarToVisualBottom();
-        }
-
         var BAR_HEIGHT = 64;
         var barPollTimer = null;
         var barRafId = null;
