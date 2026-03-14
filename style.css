@@ -691,7 +691,7 @@ a:link {
     color: #FFA500;
     font-size: 36px;
     text-align: center;
-    padding: 10px 16px calc(6px + env(safe-area-inset-bottom, 0px));
+    padding: 10px 16px 6px;
     min-height: 44px;
     box-sizing: border-box;
     align-items: center;
